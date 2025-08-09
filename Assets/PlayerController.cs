@@ -1,26 +1,50 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f; // Tốc độ di chuyển
-    public float jumpForce = 10f; // Lực nhảy
-    private Rigidbody2D rb; // Rigidbody của player
+    private Rigidbody2D rb;
+    private bool gravityFlipped = false;
+    public float moveSpeed = 5f;
 
-    private void Start()
+    void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.gravityScale = 1f; // Set initial gravity scale to 1
     }
 
-    private void Update()
+    void Update()
     {
-        // Di chuyển sang trái và phải
-        float horizontalInput = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(horizontalInput * moveSpeed, rb.velocity.y);
-
-        // Nhảy lên
-        if (Input.GetKeyDown(KeyCode.Space) && Mathf.Abs(rb.velocity.y) < 0.01f)
+        // Move continuously to the right
+        rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
+        
+        if (IsTapped())
         {
-            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            FlipGravity();
         }
+    }
+
+    bool IsTapped()
+    {
+        // Check for touch input
+        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+            return true;
+
+        // Check for mouse click
+        if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
+            return true;
+
+        return false;
+    }
+
+    void FlipGravity()
+    {
+        gravityFlipped = !gravityFlipped;
+        rb.gravityScale = gravityFlipped ? -1f : 1f;
+
+        // Flip the player's scale to visually represent gravity change
+        Vector3 scale = transform.localScale;
+        scale.y *= -1;
+        transform.localScale = scale;
     }
 }
