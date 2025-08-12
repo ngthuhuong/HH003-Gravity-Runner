@@ -6,10 +6,12 @@ public class PlayerController : MonoBehaviour
     private bool gravityFlipped = false;
     public float moveSpeed = 5f;
     private bool isGrounded; // Check if the player is grounded
+    private Animator playerAnimator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponentInChildren<Animator>();
         rb.gravityScale = 1f; // Set initial gravity
     }
 
@@ -32,6 +34,13 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
+            playerAnimator.SetBool("isJump", false);
+            playerAnimator.SetBool("isRun", true);
+        }else if (collision.gameObject.CompareTag("Trap"))
+        {
+            playerAnimator.SetTrigger("trHit");
+            Time.timeScale = 0f;
+            Debug.Log("Player hit a trap!");
         }
     }
 
@@ -41,8 +50,11 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
+            playerAnimator.SetBool("isJump", true);
+            playerAnimator.SetBool("isRun", false);
         }
     }
+    
 
     bool IsTapped()
     {
@@ -61,6 +73,7 @@ public class PlayerController : MonoBehaviour
     {
         gravityFlipped = !gravityFlipped;
         rb.gravityScale = gravityFlipped ? -1f : 1f;
+       
 
         // Flip the player's scale to reflect gravity change
         Vector3 scale = transform.localScale;
@@ -69,7 +82,7 @@ public class PlayerController : MonoBehaviour
     }
     void CheckOutOfScreen()
     {
-        if (Mathf.Abs(transform.position.y) > 5f) // Check if the player is beyond 5f vertically
+        if (Mathf.Abs(transform.position.y) > 10f) // Check if the player is beyond 5f vertically
         {
             Debug.Log("Out screen");
             Time.timeScale = 0f; // Stop the game
