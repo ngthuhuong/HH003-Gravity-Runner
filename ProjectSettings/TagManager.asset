@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Ground
   - Trap
+  - Coin
+  - Checkponit
   layers:
   - Default
   - TransparentFX

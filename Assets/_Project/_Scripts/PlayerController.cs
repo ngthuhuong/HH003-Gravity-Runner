@@ -1,6 +1,9 @@
+using System;
+using System.Collections;
+using MoreMountains.Tools;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
 {
     private Rigidbody2D rb;
     private bool gravityFlipped = false;
@@ -13,6 +16,15 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponentInChildren<Animator>();
         rb.gravityScale = 1f; // Set initial gravity
+    }
+
+    private void OnEnable()
+    {
+        this.MMEventStartListening();
+    }
+    private void OnDisable()
+    {
+        this.MMEventStopListening();
     }
 
     void Update()
@@ -37,10 +49,8 @@ public class PlayerController : MonoBehaviour
             playerAnimator.SetBool("isJump", false);
             playerAnimator.SetBool("isRun", true);
         }else if (collision.gameObject.CompareTag("Trap"))
-        {
-            playerAnimator.SetTrigger("trHit");
-            Time.timeScale = 0f;
-            Debug.Log("Player hit a trap!");
+        { 
+          MMEventManager.TriggerEvent(new HitEvent());  
         }
     }
 
@@ -87,5 +97,25 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Out screen");
             Time.timeScale = 0f; // Stop the game
         }
+    }
+
+    public void OnMMEvent(HitEvent eventType)
+    {
+        Debug.Log("Player hit a trap!");
+        playerAnimator.Play("Hit"); // Replace "HitAnimation" with the actual name of your hit animation
+        StartCoroutine(WaitForAnimationToEnd());
+    }
+
+    private IEnumerator WaitForAnimationToEnd()
+    {
+        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+
+        // Wait until the animation is no longer playing
+        while (playerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 || playerAnimator.IsInTransition(0))
+        {
+            yield return null;
+        }
+
+        Time.timeScale = 0f; // Stop the game after the animation ends
     }
 }
