@@ -10,23 +10,14 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
     public float moveSpeed = 5f;
     private bool isGrounded; // Check if the player is grounded
     private Animator playerAnimator;
-
+    private Health playerHealth;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         playerAnimator = GetComponentInChildren<Animator>();
         rb.gravityScale = 1f; // Set initial gravity
+        playerHealth = GetComponent<Health>();
     }
-
-    private void OnEnable()
-    {
-        this.MMEventStartListening();
-    }
-    private void OnDisable()
-    {
-        this.MMEventStopListening();
-    }
-
     void Update()
     {
         // Move continuously to the right
@@ -40,6 +31,17 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
 
     }
 
+    #region PrivateMethods
+
+      private void OnEnable()
+        {
+            this.MMEventStartListening();
+        }
+      private void OnDisable()
+        {
+            this.MMEventStopListening();
+        }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         // Check if the collision is with an object tagged as "Ground"
@@ -51,6 +53,11 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
         }else if (collision.gameObject.CompareTag("Trap"))
         { 
           MMEventManager.TriggerEvent(new HitEvent());  
+        }else if (collision.gameObject.CompareTag("Coin"))
+        {
+            // Handle coin collection
+            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Assuming 1 coin collected
+            Destroy(collision.gameObject); // Destroy the coin object
         }
     }
 
@@ -65,7 +72,8 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
         }
     }
     
-
+    #endregion
+    
     bool IsTapped()
     {
         // Check for touch input
@@ -99,23 +107,29 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
         }
     }
 
-    public void OnMMEvent(HitEvent eventType)
-    {
-        Debug.Log("Player hit a trap!");
-        playerAnimator.Play("Hit"); // Replace "HitAnimation" with the actual name of your hit animation
-        StartCoroutine(WaitForAnimationToEnd());
-    }
+    #region EventHandlers
 
-    private IEnumerator WaitForAnimationToEnd()
-    {
-        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
-
-        // Wait until the animation is no longer playing
-        while (playerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 || playerAnimator.IsInTransition(0))
+     public void OnMMEvent(HitEvent eventType)
         {
-            yield return null;
+            Debug.Log("Player hit a trap!");
+            playerHealth.TakeDamage(100);
+            playerAnimator.Play("Hit"); // Replace "HitAnimation" with the actual name of your hit animation
+            StartCoroutine(WaitForAnimationToEnd());
+        }
+    
+        private IEnumerator WaitForAnimationToEnd()
+        {
+            AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+    
+            // Wait until the animation is no longer playing
+            while (playerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 || playerAnimator.IsInTransition(0))
+            {
+                yield return null;
+            }
+    
+            Time.timeScale = 0f; // Stop the game after the animation ends
         }
 
-        Time.timeScale = 0f; // Stop the game after the animation ends
-    }
+    #endregion
+   
 }
