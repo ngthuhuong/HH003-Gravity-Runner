@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, MMEventListener<HitEvent>,MMEventListener<EarnCoinEvent>
+public class GameManager : MonoBehaviour, MMEventListener<EarnCoinEvent>
 {
     private static GameManager _instance;
     public static GameManager Instance
@@ -56,13 +56,14 @@ public class GameManager : MonoBehaviour, MMEventListener<HitEvent>,MMEventListe
     private void OnEnable()
     {
         // Register to listen to events
-        this.MMEventStartListening<HitEvent>();
+       
         this.MMEventStartListening<EarnCoinEvent>();
     }
     void Start()
     {
-        GUIHUD = new GUIHUD_Controller();
+        GUIHUD = FindObjectOfType<GUIHUD_Controller>();
     }
+
 
     // Update is called once per frame
     void Update()
@@ -75,11 +76,7 @@ public class GameManager : MonoBehaviour, MMEventListener<HitEvent>,MMEventListe
     public void OnMMEvent(EarnCoinEvent eventType)
     {
         CoinCount += eventType.coinCount;
-        GUIHUD.SetCoinText(CoinCount);
     }
 
-    public void OnMMEvent(HitEvent eventType)
-    {
-        throw new System.NotImplementedException();
-    }
+  
 }

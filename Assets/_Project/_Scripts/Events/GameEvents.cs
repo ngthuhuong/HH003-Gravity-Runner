@@ -5,7 +5,6 @@ using MoreMountains.Tools;
 
 public struct HitEvent
 {
- 
     
 }
 public struct EarnCoinEvent
@@ -16,4 +15,8 @@ public struct EarnCoinEvent
     {
         coinCount = count;
     }
+}
+public struct LoseAHeartEvent
+{
+
 }

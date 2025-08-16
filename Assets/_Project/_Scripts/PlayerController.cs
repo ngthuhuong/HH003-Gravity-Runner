@@ -53,11 +53,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
         }else if (collision.gameObject.CompareTag("Trap"))
         { 
           MMEventManager.TriggerEvent(new HitEvent());  
-        }else if (collision.gameObject.CompareTag("Coin"))
-        {
-            // Handle coin collection
-            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Assuming 1 coin collected
-            Destroy(collision.gameObject); // Destroy the coin object
         }
     }
 
@@ -71,7 +66,16 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
             playerAnimator.SetBool("isRun", false);
         }
     }
-    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Coin"))
+        {
+            Debug.Log("coin collected!");
+            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // tăng coin
+            Destroy(other.gameObject); // xoá coin
+        }
+    }
+
     #endregion
     
     bool IsTapped()
@@ -100,7 +104,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
     }
     void CheckOutOfScreen()
     {
-        if (Mathf.Abs(transform.position.y) > 10f) // Check if the player is beyond 5f vertically
+        if (Mathf.Abs(transform.position.y) > 20f) // Check if the player is beyond 5f vertically
         {
             Debug.Log("Out screen");
             Time.timeScale = 0f; // Stop the game
