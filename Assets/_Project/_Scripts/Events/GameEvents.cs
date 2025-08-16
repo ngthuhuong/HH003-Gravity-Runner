@@ -20,3 +20,7 @@ public struct LoseAHeartEvent
 {
 
 }
+public struct ResumeGameEvent
+{
+    
+}

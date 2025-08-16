@@ -3,7 +3,7 @@ using System.Collections;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
+public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>,MMEventListener<ResumeGameEvent>
 {
     private Rigidbody2D rb;
     private bool gravityFlipped = false;
@@ -35,11 +35,13 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
 
       private void OnEnable()
         {
-            this.MMEventStartListening();
+            this.MMEventStartListening<HitEvent>();
+            this.MMEventStartListening<ResumeGameEvent>();
         }
       private void OnDisable()
         {
-            this.MMEventStopListening();
+            this.MMEventStopListening<HitEvent>();
+            this.MMEventStopListening<ResumeGameEvent>();
         }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -117,23 +119,21 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>
         {
             Debug.Log("Player hit a trap!");
             playerHealth.TakeDamage(100);
-            playerAnimator.Play("Hit"); // Replace "HitAnimation" with the actual name of your hit animation
+            playerAnimator.Play("Hit");
             StartCoroutine(WaitForAnimationToEnd());
         }
     
         private IEnumerator WaitForAnimationToEnd()
         {
-            AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
-    
-            // Wait until the animation is no longer playing
-            while (playerAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1 || playerAnimator.IsInTransition(0))
-            {
-                yield return null;
-            }
-    
-            Time.timeScale = 0f; // Stop the game after the animation ends
+            yield return new WaitForSeconds(0.5f); // đợi animation hit kết thúc (thời gian clip)
+            Time.timeScale = 0f; // Dừng game sau khi animation kết thúc
+            
         }
 
     #endregion
-   
+
+    public void OnMMEvent(ResumeGameEvent eventType)
+    {
+        playerAnimator.SetBool("isRun", true);
+    }
 }

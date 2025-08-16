@@ -1,15 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+using MoreMountains.Tools;
 using UnityEngine;
-using UnityEngine.UI; // Correct namespace for UI Button
+using UnityEngine.UI;
 
 public class FailPanelController : MonoBehaviour
 {
     private Button closeButton;
 
-    void Start()
+    private void OnEnable()
     {
-        closeButton = gameObject.GetComponent<Button>(); // Access UnityEngine.UI.Button
+        // Tìm button trong children thay vì trên chính Panel
+        closeButton = GetComponentInChildren<Button>();
+
+        if (closeButton == null)
+        {
+            Debug.LogError("Close button not found!");
+        }
+        else
+        {
+            // Gán sự kiện click
+            closeButton.onClick.RemoveAllListeners();
+            closeButton.onClick.AddListener(DeactivePanel);
+        }
     }
-    
+
+    public void DeactivePanel()
+    {
+        gameObject.SetActive(false);
+        MMEventManager.TriggerEvent(new ResumeGameEvent());
+        Time.timeScale = 1;
+    }
 }
