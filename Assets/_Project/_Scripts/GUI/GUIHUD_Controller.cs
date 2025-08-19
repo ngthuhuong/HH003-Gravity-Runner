@@ -3,7 +3,7 @@ using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
 
-public class GUIHUD_Controller : MonoBehaviour, MMEventListener<EarnCoinEvent>, MMEventListener<HitEvent>
+public class GUIHUD_Controller : MonoBehaviour
 {
     public TextMeshProUGUI coinText; // Reference to the Text component for coin count
     public GameObject heartPrefab; // Prefab for the heart icon
@@ -11,20 +11,14 @@ public class GUIHUD_Controller : MonoBehaviour, MMEventListener<EarnCoinEvent>, 
 
     private int maxHearts = 3; // Maximum number of hearts
     private int currentHearts; // Current number of hearts
+    public int CurruentHearts
+    {
+        get { return currentHearts; }
+        private set { currentHearts = value; }
+    }
     private readonly List<GameObject> heartObjects = new List<GameObject>(); // Cache for heart objects
 
-    private void OnEnable()
-    {
-        this.MMEventStartListening<EarnCoinEvent>();
-        this.MMEventStartListening<HitEvent>();
-    }
-
-    private void OnDisable()
-    {
-        this.MMEventStopListening<EarnCoinEvent>();
-        this.MMEventStopListening<HitEvent>();
-    }
-
+   
     private void Start()
     {
         if (coinText == null || healthRoot == null || heartPrefab == null)
@@ -69,24 +63,17 @@ public class GUIHUD_Controller : MonoBehaviour, MMEventListener<EarnCoinEvent>, 
         }
     }
 
-    public void OnMMEvent(EarnCoinEvent eventType)
-    {
-        UpdateCoinText(GameManager.Instance.CoinCount);
-    }
-
-    public void OnMMEvent(HitEvent eventType)
+    public void HideAHeart()
     {
         if (currentHearts > 0)
         {
+            heartObjects[currentHearts - 1].SetActive(false); // Disable the last active heart
             currentHearts--;
-            MMEventManager.TriggerEvent(new LoseAHeartEvent());
-            heartObjects[currentHearts].SetActive(false); // Disable the last active heart
-        }
-        if(currentHearts == 0) 
-        {
-            // Handle player death or game over logic here
-            Debug.Log("Player has no hearts left!");
-            // You can trigger a game over event or any other logic as needed
+
+            if (currentHearts == 0)
+            {
+                MMEventManager.TriggerEvent(new DieEvent());
+            }
         }
     }
 }

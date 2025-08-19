@@ -24,3 +24,7 @@ public struct ResumeGameEvent
 {
     
 }
+public struct DieEvent
+{
+   
+}

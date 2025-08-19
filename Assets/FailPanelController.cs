@@ -1,16 +1,17 @@
+using System;
 using MoreMountains.Tools;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FailPanelController : MonoBehaviour
 {
-    private Button closeButton;
-
+    [SerializeField] private Button closeButton;
+    [SerializeField] private TextMeshProUGUI text;
+    
     private void OnEnable()
     {
-        // Tìm button trong children thay vì trên chính Panel
-        closeButton = GetComponentInChildren<Button>();
-
+        
         if (closeButton == null)
         {
             Debug.LogError("Close button not found!");
@@ -23,10 +24,29 @@ public class FailPanelController : MonoBehaviour
         }
     }
 
+   public  void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+   public void Show()
+    {
+        gameObject.SetActive(true);
+        Time.timeScale = 0;
+    }
+
     public void DeactivePanel()
     {
         gameObject.SetActive(false);
-        MMEventManager.TriggerEvent(new ResumeGameEvent());
         Time.timeScale = 1;
+        MMEventManager.TriggerEvent(new ResumeGameEvent());
+        
     }
+
+    public void SetEndLifeScreen()
+    {
+        text.text = "You lose!";
+        Show();
+        Debug.Log("Player has no hearts left!");
+    }
+
 }

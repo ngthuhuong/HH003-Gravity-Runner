@@ -1,66 +1,111 @@
-using System;
 using System.Collections;
-using MoreMountains.Tools;
+using System.Collections.Generic;
 using UnityEngine;
+using MoreMountains.Tools;
 
-public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>,MMEventListener<ResumeGameEvent>
+public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEventListener<ResumeGameEvent>,
+    MMEventListener<LoseAHeartEvent>
 {
+    // --- Fields ---
     private Rigidbody2D rb;
-    private bool gravityFlipped = false;
-    public float moveSpeed = 5f;
-    private bool isGrounded; // Check if the player is grounded
     private Animator playerAnimator;
     private Health playerHealth;
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        playerAnimator = GetComponentInChildren<Animator>();
-        rb.gravityScale = 1f; // Set initial gravity
-        playerHealth = GetComponent<Health>();
-    }
-    void Update()
-    {
-        // Move continuously to the right
-        rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
 
-        if (IsTapped() && isGrounded) // Allow gravity flip only when grounded
-        {
-            FlipGravity();
-        }
-        CheckOutOfScreen(); // Check if the player is out of bounds
+    private bool gravityFlipped = false;
+    private bool isGrounded = false; // Track if the player is grounded
+    private bool isStopped = false; // Track if the player is stopped
 
+    private float distance;
+    private Vector3 startPoint;
+    public float moveSpeed = 5f; // Player movement speed
+
+    // --- Unity Methods ---
+    private void Start()
+    {
+        InitializeComponents();
+        distance = 0;
+        startPoint = transform.position; // Set the start point to the player's initial position
     }
 
-    #region PrivateMethods
+    private void Update()
+    {
+        if (!isStopped)
+        {
+            MovePlayer();
+            HandleInput();
+            CheckOutOfScreen();
+            distance = transform.position.x - startPoint.x; // Calculate distance
+        }
+    }
 
-      private void OnEnable()
-        {
-            this.MMEventStartListening<HitEvent>();
-            this.MMEventStartListening<ResumeGameEvent>();
-        }
-      private void OnDisable()
-        {
-            this.MMEventStopListening<HitEvent>();
-            this.MMEventStopListening<ResumeGameEvent>();
-        }
+    #region private methods
+ private void OnEnable()
+    {
+        this.MMEventStartListening<HitEvent>();
+        this.MMEventStartListening<ResumeGameEvent>();
+        this.MMEventStartListening<LoseAHeartEvent>();
+    }
+
+    private void OnDisable()
+    {
+        this.MMEventStopListening<HitEvent>();
+        this.MMEventStopListening<ResumeGameEvent>();
+        this.MMEventStopListening<LoseAHeartEvent>();
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Check if the collision is with an object tagged as "Ground"
+        HandleCollisionEnter(collision);
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        HandleCollisionExit(collision);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        HandleTriggerEnter(other);
+    }
+
+    // --- Private Methods ---
+    private void InitializeComponents()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        playerAnimator = GetComponentInChildren<Animator>();
+        playerHealth = GetComponent<Health>();
+        rb.gravityScale = 1f; // Set initial gravity
+    }
+
+    private void MovePlayer()
+    {
+        rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
+    }
+
+    private void HandleInput()
+    {
+        if (IsTapped() && isGrounded)
+        {
+            FlipGravity();
+        }
+    }
+
+    private void HandleCollisionEnter(Collision2D collision)
+    {
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = true;
             playerAnimator.SetBool("isJump", false);
             playerAnimator.SetBool("isRun", true);
-        }else if (collision.gameObject.CompareTag("Trap"))
-        { 
-          MMEventManager.TriggerEvent(new HitEvent());  
+        }
+        else if (collision.gameObject.CompareTag("Trap"))
+        {
+            MMEventManager.TriggerEvent(new HitEvent());
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void HandleCollisionExit(Collision2D collision)
     {
-        // Check if the player is no longer colliding with the ground
         if (collision.gameObject.CompareTag("Ground"))
         {
             isGrounded = false;
@@ -68,72 +113,103 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>,MMEvent
             playerAnimator.SetBool("isRun", false);
         }
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    private void HandleTriggerEnter(Collider2D other)
     {
         if (other.CompareTag("Coin"))
         {
-            Debug.Log("coin collected!");
-            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // tăng coin
-            Destroy(other.gameObject); // xoá coin
+            Debug.Log("Coin collected!");
+            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
+            Destroy(other.gameObject); // Destroy the coin
         }
     }
 
-    #endregion
-    
-    bool IsTapped()
+    private bool IsTapped()
     {
-        // Check for touch input
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
-            return true;
-
-        // Check for mouse click
-        if (Input.GetMouseButtonDown(0)) // 0 is the left mouse button
-            return true;
-
-        return false;
+        return Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ||
+               Input.GetMouseButtonDown(0);
     }
 
-    void FlipGravity()
+    private void FlipGravity()
     {
         gravityFlipped = !gravityFlipped;
         rb.gravityScale = gravityFlipped ? -1f : 1f;
-       
 
         // Flip the player's scale to reflect gravity change
         Vector3 scale = transform.localScale;
         scale.y *= -1;
         transform.localScale = scale;
     }
-    void CheckOutOfScreen()
+
+    private void CheckOutOfScreen()
     {
-        if (Mathf.Abs(transform.position.y) > 20f) // Check if the player is beyond 5f vertically
+        if (Mathf.Abs(transform.position.y) > 20f) // Check vertical bounds
         {
-            Debug.Log("Out screen");
+            Debug.Log("Out of screen");
+            // StopPlayer();
+            MMEventManager.TriggerEvent(new LoseAHeartEvent());
             Time.timeScale = 0f; // Stop the game
         }
     }
 
-    #region EventHandlers
-
-     public void OnMMEvent(HitEvent eventType)
-        {
-            Debug.Log("Player hit a trap!");
-            playerHealth.TakeDamage(100);
-            playerAnimator.Play("Hit");
-            StartCoroutine(WaitForAnimationToEnd());
-        }
     
-        private IEnumerator WaitForAnimationToEnd()
-        {
-            yield return new WaitForSeconds(0.5f); // đợi animation hit kết thúc (thời gian clip)
-            Time.timeScale = 0f; // Dừng game sau khi animation kết thúc
-            
-        }
 
     #endregion
+   
+    // --- Event Handlers ---
+    public void OnMMEvent(HitEvent eventType)
+    {
+        playerHealth.TakeDamage(100);
+        playerAnimator.Play("Hit");
+        StartCoroutine(WaitForAnimationToEnd());
+    }
+
+    private IEnumerator WaitForAnimationToEnd()
+    {
+        AnimatorStateInfo stateInfo = playerAnimator.GetCurrentAnimatorStateInfo(0);
+
+        while (stateInfo.IsName("Hit") && stateInfo.normalizedTime < 1f)
+        {
+            yield return null; // Wait for one frame
+        }
+
+        Time.timeScale = 0f; // Pause the game
+    }
+
+    public void OnMMEvent(LoseAHeartEvent eventType)
+    {
+        Debug.Log("Player lost a heart!");
+        StopPlayer(); // Stop the player
+    }
 
     public void OnMMEvent(ResumeGameEvent eventType)
     {
-        playerAnimator.SetBool("isRun", true);
+        Debug.Log("Game resumed!");
+        ContinuePlayer(); // Resume the player
+    }
+
+    // --- Public Methods ---
+    public void StopPlayer()
+    {
+        isStopped = true;
+        rb.velocity = Vector2.zero; // Stop player movement
+        playerAnimator.SetBool("isRun", false); // Stop running animation
+    }
+
+    public void ContinuePlayer()
+    {
+        transform.position = startPoint;
+        isStopped = true;
+        playerAnimator.Play("Idle");
+        StartCoroutine(WaitForCoolDown());
+    }
+    private IEnumerator WaitForCoolDown()
+    {
+             yield return new WaitForSeconds(0.5f); // Cooldown before allowing player to move again
+             isStopped = false; // Allow player to move again
+             playerAnimator.SetBool("isRun",true); // or use SetBool if using animator parameters
+
+             Debug.Log("Player can move again after cooldown.");
     }
 }
+ 

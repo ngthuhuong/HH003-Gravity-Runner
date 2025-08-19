@@ -2,19 +2,19 @@ using System;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GUIManager : MonoBehaviour,MMEventListener<LoseAHeartEvent>
+public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>
 {
     [Header("UI Elements")]
-    private GameObject guiHUD;
-    private GameObject guiFailPanel;
-    private MMEventListener<HitEvent> _mmEventListenerImplementation;
+    private GUIHUD_Controller guiHUD;
+    private FailPanelController guiFailPanel;
+   
 
     void Start()
     {
         // Find children by name
-        guiHUD = transform.Find("HUD")?.gameObject;
-        guiFailPanel = transform.Find("FailPanel")?.gameObject;
-        guiFailPanel.SetActive(false);
+        guiHUD = transform.Find("HUD")?.GetComponent<GUIHUD_Controller>();
+        guiFailPanel = transform.Find("FailPanel")?.GetComponent<FailPanelController>();
+        guiFailPanel.Hide();
         // Check if the objects were found
         if (guiHUD == null)
         {
@@ -26,20 +26,34 @@ public class GUIManager : MonoBehaviour,MMEventListener<LoseAHeartEvent>
             Debug.LogError("GUIFailPanel not found!");
         }
     }
-
     private void OnEnable()
     {
+        this.MMEventStartListening<EarnCoinEvent>();
+        this.MMEventStartListening<DieEvent>();
         this.MMEventStartListening<LoseAHeartEvent>();
     }
 
     private void OnDisable()
     {
+        this.MMEventStopListening<EarnCoinEvent>();
         this.MMEventStopListening<LoseAHeartEvent>();
+        this.MMEventStopListening<DieEvent>();
     }
-    
+
+
+    public void OnMMEvent(DieEvent eventType)
+    {
+        guiFailPanel.SetEndLifeScreen();
+    }
 
     public void OnMMEvent(LoseAHeartEvent eventType)
     {
-        guiFailPanel.SetActive(true);
+        guiHUD.HideAHeart();
+        guiFailPanel.Show();
+    }
+
+    public void OnMMEvent(EarnCoinEvent eventType)
+    {
+        Debug.Log("Earned coins");
     }
 }
