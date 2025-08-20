@@ -46,6 +46,7 @@ public class FailPanelController : MonoBehaviour
     {
         text.text = "You lose!";
         Show();
+        //bổ sung them ự kiện lose game
         Debug.Log("Player has no hearts left!");
     }
 

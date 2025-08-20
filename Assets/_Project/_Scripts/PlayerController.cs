@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private float distance;
     private Vector3 startPoint;
+    private bool savedGravity;
     public float moveSpeed = 5f; // Player movement speed
 
     // --- Unity Methods ---
@@ -24,7 +25,13 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     {
         InitializeComponents();
         distance = 0;
-        startPoint = transform.position; // Set the start point to the player's initial position
+        SaveTheRestartPoint();
+    }
+
+    private void SaveTheRestartPoint()
+    {
+        startPoint = transform.position;
+        savedGravity = gravityFlipped;
     }
 
     private void Update()
@@ -200,12 +207,18 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     {
         transform.position = startPoint;
         isStopped = true;
+        gravityFlipped = savedGravity;
+        rb.gravityScale = gravityFlipped ? -1f : 1f;
+// Adjust the player's scale to match the gravity direction
+        Vector3 scale = transform.localScale;
+        scale.y = Mathf.Abs(scale.y) * (gravityFlipped ? -1 : 1);
+        transform.localScale = scale;
         playerAnimator.Play("Idle");
         StartCoroutine(WaitForCoolDown());
     }
     private IEnumerator WaitForCoolDown()
     {
-             yield return new WaitForSeconds(0.5f); // Cooldown before allowing player to move again
+             yield return new WaitForSeconds(1f); // Cooldown before allowing player to move again
              isStopped = false; // Allow player to move again
              playerAnimator.SetBool("isRun",true); // or use SetBool if using animator parameters
 
