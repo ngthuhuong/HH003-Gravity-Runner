@@ -76,4 +76,12 @@ public class GUIHUD_Controller : MonoBehaviour
             }
         }
     }
+    public void ShowAHeart()
+    {
+        if (currentHearts < maxHearts)
+        {
+            heartObjects[currentHearts].SetActive(true); // Enable the next heart
+            currentHearts++;
+        }
+    }
 }

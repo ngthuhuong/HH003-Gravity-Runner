@@ -4,11 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FailPanelController : MonoBehaviour
+public class FailPanelController : GUIBase
 {
     [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI text;
-    
+
+    private void Start()
+    {
+        Hide();
+    }
+
     private void OnEnable()
     {
         
@@ -23,14 +28,10 @@ public class FailPanelController : MonoBehaviour
             closeButton.onClick.AddListener(DeactivePanel);
         }
     }
-
-   public  void Hide()
+    
+   public override void Show()
     {
-        gameObject.SetActive(false);
-    }
-   public void Show()
-    {
-        gameObject.SetActive(true);
+        base.Show();
         Time.timeScale = 0;
     }
 
@@ -39,7 +40,6 @@ public class FailPanelController : MonoBehaviour
         gameObject.SetActive(false);
         Time.timeScale = 1;
         MMEventManager.TriggerEvent(new ResumeGameEvent());
-        
     }
 
     public void SetEndLifeScreen()

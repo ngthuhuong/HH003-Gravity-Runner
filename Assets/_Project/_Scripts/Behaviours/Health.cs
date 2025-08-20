@@ -1,8 +1,9 @@
+using System;
 using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour,MMEventListener<GetAHeart>
 {
     [Header("Health Settings")]
     public int maxHealth = 300;
@@ -15,6 +16,15 @@ public class Health : MonoBehaviour
     {
         // Khởi tạo máu ban đầu
         currentHealth = maxHealth;
+    }
+
+    private void OnEnable()
+    {
+        this.MMEventStartListening<GetAHeart>();
+    }
+    private void OnDisable()
+    {
+        this.MMEventStopListening<GetAHeart>();
     }
 
     public void TakeDamage(int damage)
@@ -34,7 +44,7 @@ public class Health : MonoBehaviour
 
         currentHealth += healAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-
+        
     }
 
     public void HealToFull()
@@ -60,4 +70,8 @@ public class Health : MonoBehaviour
     }
 
 
+    public void OnMMEvent(GetAHeart eventType)
+    {
+        Heal(100);
+    }
 }

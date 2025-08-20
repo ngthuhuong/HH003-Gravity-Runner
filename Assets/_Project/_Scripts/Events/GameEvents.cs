@@ -28,3 +28,22 @@ public struct DieEvent
 {
    
 }
+
+public struct GetBoxEvent
+{
+  
+}
+
+public struct GetAHeart
+{
+    
+}
+public struct EarnRewardEvent
+{
+    public Reward reward;
+
+    public EarnRewardEvent(Reward r)
+    {
+        reward = r;
+    }
+}

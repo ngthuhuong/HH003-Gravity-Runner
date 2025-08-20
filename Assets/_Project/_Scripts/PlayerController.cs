@@ -128,6 +128,10 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
             Debug.Log("Coin collected!");
             MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
             Destroy(other.gameObject); // Destroy the coin
+        }else if (other.CompareTag("MBox"))
+        {
+            MMEventManager.TriggerEvent(new GetBoxEvent());
+            Destroy(other.gameObject); // Destroy the coin
         }
     }
 
@@ -207,12 +211,13 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     {
         transform.position = startPoint;
         isStopped = true;
-        gravityFlipped = savedGravity;
-        rb.gravityScale = gravityFlipped ? -1f : 1f;
-// Adjust the player's scale to match the gravity direction
-        Vector3 scale = transform.localScale;
-        scale.y = Mathf.Abs(scale.y) * (gravityFlipped ? -1 : 1);
-        transform.localScale = scale;
+
+        // Ensure gravity matches the saved state
+        if (gravityFlipped != savedGravity)
+        {
+            FlipGravity(); // Use the existing method to flip gravity
+        }
+
         playerAnimator.Play("Idle");
         StartCoroutine(WaitForCoolDown());
     }

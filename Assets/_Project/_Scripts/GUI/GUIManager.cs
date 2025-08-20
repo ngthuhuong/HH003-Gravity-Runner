@@ -2,11 +2,12 @@ using System;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>
+public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>,MMEventListener<GetAHeart>, MMEventListener<EarnRewardEvent>
 {
     [Header("UI Elements")]
     private GUIHUD_Controller guiHUD;
     private FailPanelController guiFailPanel;
+    private PopupController guiPopup;
    
 
     void Start()
@@ -14,8 +15,8 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         // Find children by name
         guiHUD = transform.Find("HUD")?.GetComponent<GUIHUD_Controller>();
         guiFailPanel = transform.Find("FailPanel")?.GetComponent<FailPanelController>();
-        guiFailPanel.Hide();
-        // Check if the objects were found
+        guiPopup = transform.Find("RewardPopup")?.GetComponent<PopupController>();
+       
         if (guiHUD == null)
         {
             Debug.LogError("GUIHUD not found!");
@@ -31,6 +32,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         this.MMEventStartListening<EarnCoinEvent>();
         this.MMEventStartListening<DieEvent>();
         this.MMEventStartListening<LoseAHeartEvent>();
+        this.MMEventStartListening<EarnRewardEvent>();
     }
 
     private void OnDisable()
@@ -38,6 +40,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         this.MMEventStopListening<EarnCoinEvent>();
         this.MMEventStopListening<LoseAHeartEvent>();
         this.MMEventStopListening<DieEvent>();
+        this.MMEventStopListening<EarnRewardEvent>();
     }
 
 
@@ -54,6 +57,16 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
 
     public void OnMMEvent(EarnCoinEvent eventType)
     {
-        Debug.Log("Earned coins");
+        guiHUD.UpdateCoinText(GameManager.Instance.CoinCount);
+    }
+
+    public void OnMMEvent(GetAHeart eventType)
+    {
+        guiHUD.ShowAHeart();
+    }
+
+    public void OnMMEvent(EarnRewardEvent eventType)
+    {
+        guiPopup.ShowReward(eventType);
     }
 }
