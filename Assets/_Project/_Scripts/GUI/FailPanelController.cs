@@ -50,4 +50,10 @@ public class FailPanelController : GUIBase
         Debug.Log("Player has no hearts left!");
     }
 
+    public void LevelComplete()
+    {
+        text.text = "You complete the level!";
+        Show();
+    }
+
 }

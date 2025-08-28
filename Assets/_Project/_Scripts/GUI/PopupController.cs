@@ -38,4 +38,12 @@ public class PopupController : GUIBase
         Show();
         Time.timeScale = 0;
     }
+
+    public void PauseGame()
+    {
+        rewardText.text = "Pause Game!";
+        Show();
+        Time.timeScale = 0;
+    }
+  
 }

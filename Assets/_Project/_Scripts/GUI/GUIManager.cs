@@ -2,7 +2,7 @@ using System;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>,MMEventListener<GetAHeart>, MMEventListener<EarnRewardEvent>
+public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>,MMEventListener<GetAHeart>, MMEventListener<EarnRewardEvent>, MMEventListener<LevelCompleteEvent>
 {
     [Header("UI Elements")]
     private GUIHUD_Controller guiHUD;
@@ -33,6 +33,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         this.MMEventStartListening<DieEvent>();
         this.MMEventStartListening<LoseAHeartEvent>();
         this.MMEventStartListening<EarnRewardEvent>();
+        this.MMEventStartListening<LevelCompleteEvent>();
     }
 
     private void OnDisable()
@@ -41,6 +42,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         this.MMEventStopListening<LoseAHeartEvent>();
         this.MMEventStopListening<DieEvent>();
         this.MMEventStopListening<EarnRewardEvent>();
+        this.MMEventStopListening<LevelCompleteEvent>();
     }
 
 
@@ -68,5 +70,10 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
     public void OnMMEvent(EarnRewardEvent eventType)
     {
         guiPopup.ShowReward(eventType);
+    }
+
+    public void OnMMEvent(LevelCompleteEvent eventType)
+    {
+        guiFailPanel.LevelComplete();   
     }
 }

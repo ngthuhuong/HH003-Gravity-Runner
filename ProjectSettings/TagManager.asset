@@ -8,6 +8,8 @@ TagManager:
   - Trap
   - Coin
   - Checkponit
+  - MBox
+  - End
   layers:
   - Default
   - TransparentFX

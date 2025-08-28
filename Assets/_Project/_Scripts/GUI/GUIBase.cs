@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GUIBase : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class GUIBase : MonoBehaviour
     public virtual void Hide()
     {
         gameObject.SetActive(false);
+        EventSystem.current.SetSelectedGameObject(null); // chặn sự kiện lan tiếp
+
     }
     public virtual void ShowAndPause()
     {

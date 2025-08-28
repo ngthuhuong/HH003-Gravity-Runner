@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MoreMountains.Tools;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEventListener<ResumeGameEvent>,
     MMEventListener<LoseAHeartEvent>
@@ -123,15 +124,21 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void HandleTriggerEnter(Collider2D other)
     {
+        Debug.Log("Collided with: " + other.gameObject.name);
         if (other.CompareTag("Coin"))
         {
-            Debug.Log("Coin collected!");
+          
             MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
             Destroy(other.gameObject); // Destroy the coin
         }else if (other.CompareTag("MBox"))
         {
             MMEventManager.TriggerEvent(new GetBoxEvent());
             Destroy(other.gameObject); // Destroy the coin
+        }else if (other.CompareTag("End"))
+        {
+            Debug.Log("End");
+            MMEventManager.TriggerEvent(new LevelCompleteEvent());
+            Time.timeScale = 0f; // Stop the game
         }
     }
 

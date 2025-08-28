@@ -47,3 +47,8 @@ public struct EarnRewardEvent
         reward = r;
     }
 }
+
+public struct LevelCompleteEvent
+{
+    
+}
