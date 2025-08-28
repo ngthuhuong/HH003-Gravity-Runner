@@ -214,12 +214,23 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         playerAnimator.SetBool("isRun", false); // Stop running animation
     }
 
-    public void ContinuePlayer()
+    public void ContinuePlayer() //comeback to the start point
     {
         transform.position = startPoint;
         isStopped = true;
 
         // Ensure gravity matches the saved state
+        if (gravityFlipped != savedGravity)
+        {
+            FlipGravity(); // Use the existing method to flip gravity
+        }
+
+        playerAnimator.Play("Idle");
+        StartCoroutine(WaitForCoolDown());
+    }
+    public void ContinuePlayerNoReset() 
+    {
+        isStopped = true;
         if (gravityFlipped != savedGravity)
         {
             FlipGravity(); // Use the existing method to flip gravity
