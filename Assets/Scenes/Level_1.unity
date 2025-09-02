@@ -205,63 +205,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1597284376847595472, guid: cc8afa3931f6f994e8b5d7a8c16f49ff, type: 3}
   m_PrefabInstance: {fileID: 855499998}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &125921950
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 125921951}
-  - component: {fileID: 125921952}
-  - component: {fileID: 125921953}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &125921951
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125921950}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.18597841, y: 0.3428933, z: -0.04482012}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &125921952
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125921950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 720145b896620c94589c3782b3178778, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &125921953
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125921950}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84b1007828b68244682492a12b460ea7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &141662228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1597284376847595472, guid: cc8afa3931f6f994e8b5d7a8c16f49ff, type: 3}
@@ -34134,7 +34077,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 1212340860}
         m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: ContinuePlayerNoReset
+        m_MethodName: RunInstantly
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -35862,7 +35805,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 125921953}
+      - m_Target: {fileID: 3374411725780043611, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
         m_TargetAssemblyTypeName: ScenesManager, Assembly-CSharp
         m_MethodName: LoadToScene
         m_Mode: 5
@@ -36832,6 +36775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   closeButton: {fileID: 814299959}
   rewardText: {fileID: 335219146}
+  backToHome: {fileID: 1399939507}
 --- !u!114 &1734474801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37922,7 +37866,6 @@ SceneRoots:
   - {fileID: 1212340859}
   - {fileID: 16871156}
   - {fileID: 1753566848}
-  - {fileID: 125921951}
   - {fileID: 838621366}
   - {fileID: 474217107160706216}
   - {fileID: 1192976940}

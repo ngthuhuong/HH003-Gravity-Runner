@@ -1,21 +1,13 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class ScenesManager : MonoBehaviour
+public class ScenesManager : Singleton<ScenesManager>
 {
-    private void Awake()
-    {
-        DontDestroyOnLoad(gameObject);
-    }
-
     public void LoadToScene(string sceneName)
     {
-        SceneManager.LoadScene(sceneName);
+        SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
+        Time.timeScale = 1;
     }
-
 
     public void QuitGame()
     {

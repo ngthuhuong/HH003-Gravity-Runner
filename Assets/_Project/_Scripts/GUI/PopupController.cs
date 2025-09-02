@@ -10,10 +10,12 @@ public class PopupController : GUIBase
 {
     [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI rewardText;
+    [SerializeField] private Button backToHome;
     // Start is called before the first frame update
     void Start()
     {
         closeButton.onClick.AddListener(() => Hide());
+        backToHome.gameObject.SetActive(false);
         Hide();
     }
     
@@ -35,6 +37,14 @@ public class PopupController : GUIBase
         {
             rewardText.text = "You earned a heart!";
         }
+        
+        Show();
+        Time.timeScale = 0;
+    }
+    public void LevelComplete()
+    {
+        rewardText.text = "You complete the level!";
+        backToHome.gameObject.SetActive(true);
         Show();
         Time.timeScale = 0;
     }
@@ -42,6 +52,7 @@ public class PopupController : GUIBase
     public void PauseGame()
     {
         rewardText.text = "Pause Game!";
+        backToHome.gameObject.SetActive(true);
         Show();
         Time.timeScale = 0;
     }

@@ -1,82 +1,36 @@
-using System.Collections;
-using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour, MMEventListener<EarnCoinEvent>
+public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent>
 {
-    private static GameManager _instance;
-    public static GameManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<GameManager>();
-                if (_instance == null)
-                {
-                    GameObject obj = new GameObject("GameManager");
-                    _instance = obj.AddComponent<GameManager>();
-                }
-            }
-            return _instance;
-        }
-    }
     
-    
-    
-    private int coinCount = 0; // Total coins collected
+    private int coinCount = 0;
     public int CoinCount
     {
         get { return coinCount; }
-        private set
-        {
-            coinCount = value;
-            // Optionally, you can trigger an event here if needed
-            // MMEventManager.TriggerEvent(new CoinCountChangedEvent(coinCount));
-        }
+        private set { coinCount = value; }
     }
 
     private GUIHUD_Controller GUIHUD;
+
     
-    private void Awake()
-    {
-        // Ensure that there is only one instance of GameManager
-        if (_instance == null)
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject); // Keep GameManager across scenes
-        }
-        else if (_instance != this)
-        {
-            Destroy(gameObject); // Destroy duplicate instances
-        }
-    }
-    // Start is called before the first frame update
     private void OnEnable()
     {
-        // Register to listen to events
-       
         this.MMEventStartListening<EarnCoinEvent>();
     }
+
+    private void OnDisable()
+    {
+        this.MMEventStopListening<EarnCoinEvent>();
+    }
+
     void Start()
     {
         GUIHUD = FindObjectOfType<GUIHUD_Controller>();
     }
 
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
-
     public void OnMMEvent(EarnCoinEvent eventType)
     {
         CoinCount += eventType.coinCount;
     }
-
-  
 }

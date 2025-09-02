@@ -235,17 +235,25 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         {
             FlipGravity(); // Use the existing method to flip gravity
         }
-
+        isGrounded = true;
         playerAnimator.Play("Idle");
         StartCoroutine(WaitForCoolDown());
     }
     private IEnumerator WaitForCoolDown()
     {
-             yield return new WaitForSeconds(1f); // Cooldown before allowing player to move again
-             isStopped = false; // Allow player to move again
-             playerAnimator.SetBool("isRun",true); // or use SetBool if using animator parameters
-
-             Debug.Log("Player can move again after cooldown.");
+             yield return new WaitForSeconds(1f); 
+             isStopped = false; 
+             playerAnimator.SetBool("isRun",true);
+    }
+    public void RunInstantly()
+    {
+        isStopped = false;
+        if (gravityFlipped != savedGravity)
+        {
+            FlipGravity(); // Use the existing method to flip gravity
+        }
+        isGrounded = true;
+        playerAnimator.SetBool("isRun", true);
     }
 }
  

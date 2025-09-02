@@ -74,6 +74,6 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
 
     public void OnMMEvent(LevelCompleteEvent eventType)
     {
-        guiFailPanel.LevelComplete();   
+        guiPopup.LevelComplete();
     }
 }
