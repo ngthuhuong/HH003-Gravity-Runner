@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class ButtonsLoadScene : MonoBehaviour
 {
     private Button btn;
+    
 
     void Awake()
     {
@@ -15,7 +16,7 @@ public class ButtonsLoadScene : MonoBehaviour
         {
             btn.onClick.AddListener(() =>
             {
-                SceneManager.LoadScene("Level_1");
+                SceneManager.LoadScene("Levels");
             });
         }
         else

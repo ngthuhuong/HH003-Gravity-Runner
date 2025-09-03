@@ -59,7 +59,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
 
     public void OnMMEvent(EarnCoinEvent eventType)
     {
-        guiHUD.UpdateCoinText(GameManager.Instance.CoinCount);
+        guiHUD.UpdateCoinText();
     }
 
     public void OnMMEvent(GetAHeart eventType)

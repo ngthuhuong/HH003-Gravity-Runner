@@ -46,7 +46,6 @@ public class PopupController : GUIBase
         rewardText.text = "You complete the level!";
         backToHome.gameObject.SetActive(true);
         Show();
-        Time.timeScale = 0;
     }
 
     public void PauseGame()

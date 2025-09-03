@@ -28,16 +28,16 @@ public class GUIHUD_Controller : MonoBehaviour
         }
 
         // Initialize the HUD
-        UpdateCoinText(0); // Start with 0 coins
+        UpdateCoinText(); // Start with 0 coins
         InitializeHearts(); // Create heart objects
         SetHearts(maxHearts); // Set initial hearts
     }
 
-    public void UpdateCoinText(int coinCount)
+    public void UpdateCoinText()
     {
         if (coinText != null)
         {
-            coinText.text = coinCount.ToString();
+            coinText.text = GameManager.Instance.CoinCount.ToString();
         }
     }
 

@@ -138,7 +138,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         {
             Debug.Log("End");
             MMEventManager.TriggerEvent(new LevelCompleteEvent());
-            Time.timeScale = 0f; // Stop the game
         }
     }
 

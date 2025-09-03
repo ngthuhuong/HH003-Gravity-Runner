@@ -836,6 +836,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
+      propertyPath: Maps.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
+      propertyPath: Maps.Array.data[0]
+      value: 
+      objectReference: {fileID: 7057236222784883996, guid: fa1d2a0cf80339446b21053472c28880, type: 3}
+    - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
+      propertyPath: Maps.Array.data[1]
+      value: 
+      objectReference: {fileID: 1546965233125419811, guid: 1d42ce2410477ca458b00f1e3f126495, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
