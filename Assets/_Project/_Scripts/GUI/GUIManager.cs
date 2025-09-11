@@ -8,6 +8,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
     private GUIHUD_Controller guiHUD;
     private FailPanelController guiFailPanel;
     private PopupController guiPopup;
+    private GUIProfile guiProfile;
    
 
     void Start()
@@ -16,6 +17,7 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
         guiHUD = transform.Find("HUD")?.GetComponent<GUIHUD_Controller>();
         guiFailPanel = transform.Find("FailPanel")?.GetComponent<FailPanelController>();
         guiPopup = transform.Find("RewardPopup")?.GetComponent<PopupController>();
+        guiProfile = transform.Find("Profile")?.GetComponent<GUIProfile>();
        
         if (guiHUD == null)
         {
@@ -75,5 +77,10 @@ public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListene
     public void OnMMEvent(LevelCompleteEvent eventType)
     {
         guiPopup.LevelComplete();
+    }
+    public void HidePopup()
+    {
+        guiPopup.Hide();
+        guiFailPanel.Hide();
     }
 }

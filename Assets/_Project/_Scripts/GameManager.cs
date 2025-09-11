@@ -16,7 +16,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     [SerializeField] private List<GameObject> Maps = new List<GameObject>();
 
     private GameObject currentMapInstance; // giữ tham chiếu map đang chạy
-
+    public bool isLoaded { get; private set; } = false; 
     private void OnEnable()
     {
         this.MMEventStartListening<EarnCoinEvent>();
@@ -32,7 +32,16 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private void Start()
     {
         GUIHUD = FindObjectOfType<GUIHUD_Controller>();
-        LoadData();
+        //LoadData();
+        SetDefaultData();
+    }
+
+    private void SetDefaultData()
+    {
+        PlayerPrefs.SetInt(CoinKey, 0);
+        PlayerPrefs.SetInt(LevelKey, 1);
+        PlayerPrefs.Save();
+        isLoaded = true; 
     }
 
     public void SetCoin(int newCoin)
@@ -71,21 +80,20 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     {
         if (!PlayerPrefs.HasKey(CoinKey))
         {
-            PlayerPrefs.SetInt(CoinKey, 0);
-            PlayerPrefs.SetInt(LevelKey, 1);
-            PlayerPrefs.Save();
-            Debug.Log("Initialized data: Coin = 0, Level = 1");
+            SetDefaultData();
         }
 
         coinCount = PlayerPrefs.GetInt(CoinKey);
         Level = PlayerPrefs.GetInt(LevelKey);
         Debug.Log($"Data loaded: Coin = {coinCount}, Level = {Level}");
+        isLoaded = true; // Đánh dấu dữ liệu đã load xong
+        MMEventManager.TriggerEvent(new LoadedData());
     }
 
     public void PlayALevel()
     {
         Debug.Log("Playing level");
-
+        
         if (currentMapInstance != null)
         {
             Destroy(currentMapInstance);
@@ -100,6 +108,12 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
         {
             Debug.Log("No level found or map is null.");
         }
+    }
+
+    public void PlayInstantlyALevel()
+    {
+        
+        PlayALevel();
     }
 
     public void OnMMEvent(LevelCompleteEvent eventType)

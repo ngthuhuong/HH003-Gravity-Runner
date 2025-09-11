@@ -52,3 +52,8 @@ public struct LevelCompleteEvent
 {
     
 }
+
+public struct LoadedData
+{
+    
+}
