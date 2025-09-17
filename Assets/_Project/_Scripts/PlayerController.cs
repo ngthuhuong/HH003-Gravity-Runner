@@ -201,9 +201,17 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     public void OnMMEvent(ResumeGameEvent eventType)
     {
-        Debug.Log("Game resumed!");
-        ContinuePlayer(); // Resume the player
+        if (this == null || !gameObject.activeInHierarchy) return;
+
+        if (gameObject == null) // hoặc object nào bạn cần
+        {
+            Debug.LogWarning("Player not ready, ignoring ResumeGameEvent");
+            return;
+        }
+
+        ContinuePlayer();
     }
+
 
     // --- Public Methods ---
     public void StopPlayer()

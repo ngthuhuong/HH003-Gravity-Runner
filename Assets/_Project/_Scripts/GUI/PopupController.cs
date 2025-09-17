@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 // Định nghĩa PauseGameEvent
 
-public class PopupController : GUIBase, IGUIComponent
+public class PopupController : GUIBase
 {
     [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI rewardText;
@@ -16,11 +16,11 @@ public class PopupController : GUIBase, IGUIComponent
     private void Awake()
     {
         GUIManager.Instance.RegisterGUIComponent("popup", this);
+        Hide();
     }
 
     private void OnEnable()
     {
-        
 
         if (closeButton == null || rewardText == null || backToHome == null)
         {
@@ -32,13 +32,7 @@ public class PopupController : GUIBase, IGUIComponent
         closeButton.onClick.RemoveAllListeners();
         closeButton.onClick.AddListener(() => Hide());
     }
-
-    private void OnDisable()
-    {
-        // Hủy đăng ký khi scene unload
-        GUIManager.Instance.UnregisterAllGUIComponents();
-    }
-
+    
     private void Start()
     {
         if (closeButton == null || rewardText == null || backToHome == null)
@@ -46,9 +40,7 @@ public class PopupController : GUIBase, IGUIComponent
             Debug.LogError("PopupController: Missing required references.");
             return;
         }
-
         backToHome.gameObject.SetActive(false);
-        Hide();
     }
 
     public override void Show()
@@ -61,7 +53,12 @@ public class PopupController : GUIBase, IGUIComponent
     {
         base.Hide();
         Time.timeScale = 1;
-        backToHome.gameObject.SetActive(false); // Ẩn nút backToHome khi đóng popup
+    }
+    public void closeBoard()
+    {
+        Hide();
+        Time.timeScale = 1;
+        backToHome.gameObject.SetActive(false); 
         MMEventManager.TriggerEvent(new ResumeGameEvent());
     }
 
@@ -101,45 +98,10 @@ public class PopupController : GUIBase, IGUIComponent
         Show();
     }
 
-    // Triển khai các phương thức từ IGUIComponent
-    public void OnDieEvent(DieEvent eventType)
-    {
-        // Popup không cần xử lý DieEvent (FailPanel xử lý)
-    }
-
-    public void OnLoseAHeartEvent(LoseAHeartEvent eventType)
-    {
-        // Popup không cần xử lý LoseAHeartEvent
-    }
-
-    public void OnEarnCoinEvent(EarnCoinEvent eventType)
-    {
-        // Popup không cần xử lý EarnCoinEvent (GUIHUD xử lý)
-    }
-
-    public void OnGetAHeartEvent(GetAHeart eventType)
-    {
-        // Popup không cần xử lý GetAHeartEvent (GUIHUD xử lý)
-    }
-
-    public void OnEarnRewardEvent(EarnRewardEvent eventType)
-    {
-        ShowReward(eventType);
-    }
-
     public void OnLevelCompleteEvent(LevelCompleteEvent eventType)
     {
         LevelComplete();
     }
 
-    public void OnLoadedDataEvent(LoadedData eventType)
-    {
-        // Không cần cập nhật gì cho Popup khi dữ liệu load
-    }
-
-    // Thêm phương thức cho PauseGameEvent
-    public void OnPauseGameEvent(PauseGameEvent eventType)
-    {
-        PauseGame();
-    }
+   
 }

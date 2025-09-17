@@ -4,16 +4,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class FailPanelController : GUIBase, IGUIComponent
+public class FailPanelController : GUIBase
 {
     [SerializeField] private Button closeButton;
     [SerializeField] private TextMeshProUGUI text;
 
     private void Awake()
     {
-        GUIManager.Instance.RegisterGUIComponent("failpanel", this);
+        if (GUIManager.Instance != null)
+        {
+            GUIManager.Instance.RegisterGUIComponent("failpanel", this);
+            Hide();
+        }
+        else
+        {
+            Debug.LogError("FailPanelController: GUIManager not found!");
+        }
     }
-    private void OnEnable()
+    private void Start()
     {
         if (closeButton == null)
         {
@@ -21,21 +29,9 @@ public class FailPanelController : GUIBase, IGUIComponent
         }
         else
         {
-            // Gán sự kiện click
             closeButton.onClick.RemoveAllListeners();
             closeButton.onClick.AddListener(DeactivePanel);
         }
-    }
-
-    private void OnDisable()
-    {
-        // Hủy đăng ký khi scene unload
-        GUIManager.Instance.UnregisterAllGUIComponents();
-    }
-
-    private void Start()
-    {
-        Hide();
     }
 
     public override void Show()
@@ -54,6 +50,13 @@ public class FailPanelController : GUIBase, IGUIComponent
     {
         Hide();
         MMEventManager.TriggerEvent(new ResumeGameEvent());
+    }
+    public void SetText(string message)
+    {
+        if (text != null)
+        {
+            text.text = message;
+        }
     }
 
     public void SetEndLifeScreen()
@@ -76,40 +79,15 @@ public class FailPanelController : GUIBase, IGUIComponent
         }
         Show();
     }
-
-    // Triển khai các phương thức từ IGUIComponent
-    public void OnDieEvent(DieEvent eventType)
-    {
-        SetEndLifeScreen();
-    }
-
-    public void OnLoseAHeartEvent(LoseAHeartEvent eventType)
-    {
-        Show();
-    }
-
-    public void OnEarnCoinEvent(EarnCoinEvent eventType)
-    {
-        // FailPanel không cần xử lý EarnCoinEvent
-    }
-
-    public void OnGetAHeartEvent(GetAHeart eventType)
-    {
-        // FailPanel không cần xử lý GetAHeartEvent
-    }
-
-    public void OnEarnRewardEvent(EarnRewardEvent eventType)
-    {
-        // FailPanel không cần xử lý EarnRewardEvent
-    }
-
-    public void OnLevelCompleteEvent(LevelCompleteEvent eventType)
-    {
-        LevelComplete();
-    }
-
+    
     public void OnLoadedDataEvent(LoadedData eventType)
     {
         // Không cần cập nhật gì cho FailPanel khi dữ liệu load
+    }
+
+    public void OnHandleLoseAHeart()
+    {
+        text.text = $"You lose a heart!";
+        Show();
     }
 }

@@ -3,7 +3,7 @@ using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
 
-public class GUIHUD_Controller : MonoBehaviour, IGUIComponent
+public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEventListener<EarnCoinEvent>
 {
     [SerializeField] private TextMeshProUGUI coinText; // Reference to the Text component for coin count
     [SerializeField] private TextMeshProUGUI levelText; // Optional: Text for level display
@@ -21,6 +21,8 @@ public class GUIHUD_Controller : MonoBehaviour, IGUIComponent
     
     private void OnEnable()
     {
+        this.MMEventStartListening<LoseAHeartEvent>();
+        this.MMEventStartListening<EarnCoinEvent>();
         if (GUIManager.Instance != null)
         {
             GUIManager.Instance.RegisterGUIComponent("hud", this);
@@ -33,8 +35,10 @@ public class GUIHUD_Controller : MonoBehaviour, IGUIComponent
 
     private void OnDisable()
     {
-        // Hủy đăng ký khi scene unload
-        GUIManager.Instance.UnregisterAllGUIComponents();
+        this.MMEventStopListening<LoseAHeartEvent>();
+        this.MMEventStopListening<EarnCoinEvent>();
+        if (GUIManager.Instance != null)
+            GUIManager.Instance.UnregisterGUIComponent("hud", this);
     }
 
     private void Start()
@@ -109,35 +113,9 @@ public class GUIHUD_Controller : MonoBehaviour, IGUIComponent
         }
     }
 
-    // Triển khai các phương thức từ IGUIComponent
-    public void OnDieEvent(DieEvent eventType)
-    {
-        // HUD không cần xử lý DieEvent (FailPanel sẽ xử lý)
-    }
-
-    public void OnLoseAHeartEvent(LoseAHeartEvent eventType)
-    {
-        HideAHeart();
-    }
-
-    public void OnEarnCoinEvent(EarnCoinEvent eventType)
-    {
-        UpdateCoinText();
-    }
-
-    public void OnGetAHeartEvent(GetAHeart eventType)
-    {
-        ShowAHeart();
-    }
-
-    public void OnEarnRewardEvent(EarnRewardEvent eventType)
-    {
-        // HUD không cần xử lý EarnRewardEvent (Popup sẽ xử lý)
-    }
-
+    
     public void OnLevelCompleteEvent(LevelCompleteEvent eventType)
     {
-        // HUD không cần xử lý LevelCompleteEvent (Popup sẽ xử lý)
         UpdateLevelText(); // Cập nhật level nếu có
     }
 
@@ -145,5 +123,15 @@ public class GUIHUD_Controller : MonoBehaviour, IGUIComponent
     {
         UpdateCoinText();
         UpdateLevelText();
+    }
+
+    public void OnMMEvent(LoseAHeartEvent eventType)
+    {
+        HideAHeart();
+    }
+
+    public void OnMMEvent(EarnCoinEvent eventType)
+    {
+        UpdateCoinText();
     }
 }

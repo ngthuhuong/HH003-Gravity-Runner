@@ -734,7 +734,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &890700761
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1647,7 +1647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1734474799
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2716,6 +2716,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1212340860}
+    - target: {fileID: 2156169389025300930, guid: 828d0d8ea9b6bd24dbf128c874ed2482, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: HideAndResume
+      objectReference: {fileID: 0}
+    - target: {fileID: 2156169389025300930, guid: 828d0d8ea9b6bd24dbf128c874ed2482, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GUIBase, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5643533748724672010, guid: 828d0d8ea9b6bd24dbf128c874ed2482, type: 3}
       propertyPath: m_Name
       value: Close

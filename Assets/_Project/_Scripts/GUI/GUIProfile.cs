@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GUIProfile : MonoBehaviour, IGUIComponent
+public class GUIProfile : GUIBase
 {
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI levelText;
@@ -15,7 +15,8 @@ public class GUIProfile : MonoBehaviour, IGUIComponent
 
     private void OnDisable()
     {
-        GUIManager.Instance.UnregisterAllGUIComponents();
+        if (GUIManager.Instance != null)
+            GUIManager.Instance.UnregisterGUIComponent("profile", this);
     }
 
     public void OnLoadedDataEvent(LoadedData eventType)
@@ -35,6 +36,5 @@ public class GUIProfile : MonoBehaviour, IGUIComponent
     public void OnLoseAHeartEvent(LoseAHeartEvent eventType) { }
     public void OnEarnCoinEvent(EarnCoinEvent eventType) { }
     public void OnGetAHeartEvent(GetAHeart eventType) { }
-    public void OnEarnRewardEvent(EarnRewardEvent eventType) { }
     public void OnLevelCompleteEvent(LevelCompleteEvent eventType) { }
 }
