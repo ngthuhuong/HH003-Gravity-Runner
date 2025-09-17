@@ -31,7 +31,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
 
     private void Start()
     {
-        GUIHUD = FindObjectOfType<GUIHUD_Controller>();
+        //GUIHUD = FindObjectOfType<GUIHUD_Controller>();
         //LoadData();
         SetDefaultData();
     }
@@ -42,6 +42,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
         PlayerPrefs.SetInt(LevelKey, 1);
         PlayerPrefs.Save();
         isLoaded = true; 
+        MMEventManager.TriggerEvent(new LoadedData());
     }
 
     public void SetCoin(int newCoin)

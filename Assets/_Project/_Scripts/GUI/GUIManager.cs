@@ -2,85 +2,138 @@ using System;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GUIManager : MonoBehaviour,MMEventListener<DieEvent>,MMEventListener<LoseAHeartEvent>, MMEventListener<EarnCoinEvent>,MMEventListener<GetAHeart>, MMEventListener<EarnRewardEvent>, MMEventListener<LevelCompleteEvent>
+public interface IGUIComponent
 {
-    [Header("UI Elements")]
-    private GUIHUD_Controller guiHUD;
-    private FailPanelController guiFailPanel;
-    private PopupController guiPopup;
-    private GUIProfile guiProfile;
-   
+    void OnDieEvent(DieEvent eventType);
+    void OnLoseAHeartEvent(LoseAHeartEvent eventType);
+    void OnEarnCoinEvent(EarnCoinEvent eventType);
+    void OnGetAHeartEvent(GetAHeart eventType);
+    void OnEarnRewardEvent(EarnRewardEvent eventType);
+    void OnLevelCompleteEvent(LevelCompleteEvent eventType);
+    void OnLoadedDataEvent(LoadedData eventType);
+}
 
-    void Start()
+public class GUIManager : Singleton<GUIManager>, MMEventListener<DieEvent>, MMEventListener<LoseAHeartEvent>, 
+    MMEventListener<EarnCoinEvent>, MMEventListener<GetAHeart>, MMEventListener<EarnRewardEvent>, 
+    MMEventListener<LevelCompleteEvent>, MMEventListener<LoadedData>
+{
+    private IGUIComponent guiHUD;
+    private IGUIComponent guiFailPanel;
+    private IGUIComponent guiPopup;
+    private IGUIComponent guiProfile;
+
+    private void Awake()
     {
-        // Find children by name
-        guiHUD = transform.Find("HUD")?.GetComponent<GUIHUD_Controller>();
-        guiFailPanel = transform.Find("FailPanel")?.GetComponent<FailPanelController>();
-        guiPopup = transform.Find("RewardPopup")?.GetComponent<PopupController>();
-        guiProfile = transform.Find("Profile")?.GetComponent<GUIProfile>();
-       
-        if (guiHUD == null)
-        {
-            Debug.LogError("GUIHUD not found!");
-        }
-
-        if (guiFailPanel == null)
-        {
-            Debug.LogError("GUIFailPanel not found!");
-        }
+        base.Awake();
     }
+
     private void OnEnable()
     {
-        this.MMEventStartListening<EarnCoinEvent>();
         this.MMEventStartListening<DieEvent>();
         this.MMEventStartListening<LoseAHeartEvent>();
+        this.MMEventStartListening<EarnCoinEvent>();
+        this.MMEventStartListening<GetAHeart>();
         this.MMEventStartListening<EarnRewardEvent>();
         this.MMEventStartListening<LevelCompleteEvent>();
+        this.MMEventStartListening<LoadedData>();
     }
 
     private void OnDisable()
     {
-        this.MMEventStopListening<EarnCoinEvent>();
-        this.MMEventStopListening<LoseAHeartEvent>();
         this.MMEventStopListening<DieEvent>();
+        this.MMEventStopListening<LoseAHeartEvent>();
+        this.MMEventStopListening<EarnCoinEvent>();
+        this.MMEventStopListening<GetAHeart>();
         this.MMEventStopListening<EarnRewardEvent>();
         this.MMEventStopListening<LevelCompleteEvent>();
+        this.MMEventStopListening<LoadedData>();
     }
 
+    // Đăng ký một thành phần GUI
+    public void RegisterGUIComponent(string componentName, IGUIComponent component)
+    {
+        switch (componentName.ToLower())
+        {
+            case "hud":
+                guiHUD = component;
+                Debug.Log("Registered GUIHUD");
+                break;
+            case "failpanel":
+                guiFailPanel = component;
+                Debug.Log("Registered GUIFailPanel");
+                break;
+            case "popup":
+                guiPopup = component;
+                Debug.Log("Registered GUIPopup");
+                break;
+            case "profile":
+                guiProfile = component;
+                Debug.Log("Registered GUIProfile");
+                break;
+            default:
+                Debug.LogWarning($"Unknown GUI component: {componentName}");
+                break;
+        }
+
+        // Nếu dữ liệu đã load, cập nhật ngay
+        if (GameManager.Instance.isLoaded)
+        {
+            component.OnLoadedDataEvent(new LoadedData());
+        }
+    }
+
+    // Hủy đăng ký tất cả thành phần GUI (khi chuyển scene)
+    public void UnregisterAllGUIComponents()
+    {
+        guiHUD = null;
+        guiFailPanel = null;
+        guiPopup = null;
+        guiProfile = null;
+        Debug.Log("Unregistered all GUI components");
+    }
 
     public void OnMMEvent(DieEvent eventType)
     {
-        guiFailPanel.SetEndLifeScreen();
+        guiFailPanel?.OnDieEvent(eventType);
     }
 
     public void OnMMEvent(LoseAHeartEvent eventType)
     {
-        guiHUD.HideAHeart();
-        guiFailPanel.Show();
+        guiHUD?.OnLoseAHeartEvent(eventType);
+        guiFailPanel?.OnLoseAHeartEvent(eventType);
     }
 
     public void OnMMEvent(EarnCoinEvent eventType)
     {
-        guiHUD.UpdateCoinText();
+        guiHUD?.OnEarnCoinEvent(eventType);
     }
 
     public void OnMMEvent(GetAHeart eventType)
     {
-        guiHUD.ShowAHeart();
+        guiHUD?.OnGetAHeartEvent(eventType);
     }
 
     public void OnMMEvent(EarnRewardEvent eventType)
     {
-        guiPopup.ShowReward(eventType);
+        guiPopup?.OnEarnRewardEvent(eventType);
     }
 
     public void OnMMEvent(LevelCompleteEvent eventType)
     {
-        guiPopup.LevelComplete();
+        guiPopup?.OnLevelCompleteEvent(eventType);
     }
+
+    public void OnMMEvent(LoadedData eventType)
+    {
+        guiHUD?.OnLoadedDataEvent(eventType);
+        guiFailPanel?.OnLoadedDataEvent(eventType);
+        guiPopup?.OnLoadedDataEvent(eventType);
+        guiProfile?.OnLoadedDataEvent(eventType);
+    }
+
     public void HidePopup()
     {
-        guiPopup.Hide();
-        guiFailPanel.Hide();
+        guiPopup?.OnEarnRewardEvent(new EarnRewardEvent { /* Dữ liệu rỗng để ẩn */ });
+        guiFailPanel?.OnLoseAHeartEvent(new LoseAHeartEvent { /* Dữ liệu rỗng để ẩn */ });
     }
 }

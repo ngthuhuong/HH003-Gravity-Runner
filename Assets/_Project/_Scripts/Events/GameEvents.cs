@@ -57,3 +57,10 @@ public struct LoadedData
 {
     
 }
+public struct PauseGameEvent
+{
+    public static PauseGameEvent Trigger()
+    {
+        return new PauseGameEvent();
+    }
+}

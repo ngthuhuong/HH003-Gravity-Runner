@@ -7,6 +7,7 @@ public class ScenesManager : Singleton<ScenesManager>
     {
         SceneManager.LoadScene(sceneName, LoadSceneMode.Single);
         Time.timeScale = 1;
+        GUIManager.Instance.UnregisterAllGUIComponents();
     }
 
     public void QuitGame()
