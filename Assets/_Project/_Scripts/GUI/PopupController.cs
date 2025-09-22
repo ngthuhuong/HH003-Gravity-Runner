@@ -5,8 +5,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-// Định nghĩa PauseGameEvent
-
 public class PopupController : GUIBase
 {
     [SerializeField] private Button closeButton;
@@ -84,6 +82,7 @@ public class PopupController : GUIBase
         {
             rewardText.text = $"You complete level {GameManager.Instance.Level - 1}!";
         }
+        closeButton.gameObject.SetActive(false);
         backToHome.gameObject.SetActive(true);
         Show();
     }
@@ -98,10 +97,6 @@ public class PopupController : GUIBase
         Show();
     }
 
-    public void OnLevelCompleteEvent(LevelCompleteEvent eventType)
-    {
-        LevelComplete();
-    }
 
    
 }

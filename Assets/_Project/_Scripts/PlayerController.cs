@@ -124,7 +124,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void HandleTriggerEnter(Collider2D other)
     {
-        Debug.Log("Collided with: " + other.gameObject.name);
         if (other.CompareTag("Coin"))
         {
           

@@ -1,13 +1,16 @@
 using System;
 using MoreMountains.Tools;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class FailPanelController : GUIBase
 {
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button HomeButton;
     [SerializeField] private TextMeshProUGUI text;
+    
 
     private void Awake()
     {
@@ -65,10 +68,9 @@ public class FailPanelController : GUIBase
         {
             text.text = "You lose!";
         }
+        closeButton.gameObject.SetActive(false);
         Show();
         Debug.Log("Player has no hearts left!");
-        // Có thể thêm sự kiện LoseGameEvent ở đây nếu cần
-        // MMEventManager.TriggerEvent(new LoseGameEvent());
     }
 
     public void LevelComplete()

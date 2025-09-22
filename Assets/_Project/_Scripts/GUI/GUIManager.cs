@@ -70,17 +70,19 @@ public class GUIManager : Singleton<GUIManager>,
 
     public void OnMMEvent(LoadedData eventType)
     {
+        guiProfile?.OnLoadedDataEvent(eventType);
     }
 
     public void OnMMEvent(LoseAHeartEvent eventType)
     {
-        
         guiFailPanel.OnHandleLoseAHeart();
+        guiHUD.HideAHeart();
     }
 
     public void OnMMEvent(DieEvent eventType)
     {
         guiFailPanel.SetEndLifeScreen();
+        
     }
     
     

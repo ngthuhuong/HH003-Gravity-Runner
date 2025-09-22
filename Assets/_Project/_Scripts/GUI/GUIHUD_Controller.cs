@@ -3,7 +3,7 @@ using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
 
-public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEventListener<EarnCoinEvent>
+public class GUIHUD_Controller : GUIBase,MMEventListener<EarnCoinEvent>
 {
     [SerializeField] private TextMeshProUGUI coinText; // Reference to the Text component for coin count
     [SerializeField] private TextMeshProUGUI levelText; // Optional: Text for level display
@@ -21,7 +21,6 @@ public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEven
     
     private void OnEnable()
     {
-        this.MMEventStartListening<LoseAHeartEvent>();
         this.MMEventStartListening<EarnCoinEvent>();
         if (GUIManager.Instance != null)
         {
@@ -35,7 +34,6 @@ public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEven
 
     private void OnDisable()
     {
-        this.MMEventStopListening<LoseAHeartEvent>();
         this.MMEventStopListening<EarnCoinEvent>();
         if (GUIManager.Instance != null)
             GUIManager.Instance.UnregisterGUIComponent("hud", this);
@@ -48,6 +46,7 @@ public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEven
             Debug.LogError("GUIHUD_Controller: Missing required references.");
             return;
         }
+        UpdateLevelText();
         InitializeHearts();
         SetHearts(maxHearts); // Đặt số lượng heart ban đầu
     }
@@ -111,18 +110,6 @@ public class GUIHUD_Controller : GUIBase,MMEventListener<LoseAHeartEvent>,MMEven
             heartObjects[currentHearts].SetActive(true); // Kích hoạt heart tiếp theo
             currentHearts++;
         }
-    }
-
-    
-    public void OnLevelCompleteEvent(LevelCompleteEvent eventType)
-    {
-        UpdateLevelText(); // Cập nhật level nếu có
-    }
-
-    public void OnLoadedDataEvent(LoadedData eventType)
-    {
-        UpdateCoinText();
-        UpdateLevelText();
     }
 
     public void OnMMEvent(LoseAHeartEvent eventType)

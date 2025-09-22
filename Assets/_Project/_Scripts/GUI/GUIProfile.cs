@@ -15,8 +15,6 @@ public class GUIProfile : GUIBase
 
     private void OnDisable()
     {
-        if (GUIManager.Instance != null)
-            GUIManager.Instance.UnregisterGUIComponent("profile", this);
     }
 
     public void OnLoadedDataEvent(LoadedData eventType)
