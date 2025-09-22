@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private float distance;
     private Vector3 startPoint;
+    private Vector3 checkPoint;
     private bool savedGravity;
     public float moveSpeed = 5f; // Player movement speed
 
@@ -31,7 +32,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void SaveTheRestartPoint()
     {
-        startPoint = transform.position;
+        checkPoint = transform.position;
         savedGravity = gravityFlipped;
     }
 
@@ -42,7 +43,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
             MovePlayer();
             HandleInput();
             CheckOutOfScreen();
-            distance = transform.position.x - startPoint.x; // Calculate distance
         }
     }
 
@@ -124,21 +124,34 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void HandleTriggerEnter(Collider2D other)
     {
-        if (other.CompareTag("Coin"))
+        switch (other.tag)
         {
-          
-            MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
-            Destroy(other.gameObject); // Destroy the coin
-        }else if (other.CompareTag("MBox"))
-        {
-            MMEventManager.TriggerEvent(new GetBoxEvent());
-            Destroy(other.gameObject); // Destroy the coin
-        }else if (other.CompareTag("End"))
-        {
-            Debug.Log("End");
-            MMEventManager.TriggerEvent(new LevelCompleteEvent());
+            case "Coin":
+                MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
+                Destroy(other.gameObject); // Destroy the coin
+                break;
+
+            case "MBox":
+                MMEventManager.TriggerEvent(new GetBoxEvent());
+                Destroy(other.gameObject); // Destroy the box
+                break;
+
+            case "End":
+                MMEventManager.TriggerEvent(new LevelCompleteEvent());
+                break;
+
+            case "Checkpoint":
+                Debug.Log("Checkpoint");
+                SaveTheRestartPoint();
+                Destroy(other.gameObject); 
+                break;
+
+            default:
+                // Optional: Handle other cases or do nothing
+                break;
         }
     }
+    
 
     private bool IsTapped()
     {
@@ -222,7 +235,10 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     public void ContinuePlayer() //comeback to the start point
     {
-        transform.position = startPoint;
+        if (checkPoint != Vector3.zero)
+        {
+            transform.position = checkPoint;
+        }else transform.position = startPoint;
         isStopped = true;
 
         // Ensure gravity matches the saved state

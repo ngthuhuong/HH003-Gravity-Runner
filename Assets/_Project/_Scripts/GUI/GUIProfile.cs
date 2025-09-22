@@ -1,3 +1,4 @@
+using System;
 using MoreMountains.Tools;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,18 @@ public class GUIProfile : GUIBase
     {
     }
 
+    private void Start()
+    {
+        if (coinText != null)
+        {
+            coinText.text = $"Coins: {GameManager.Instance.CoinCount}";
+        }
+        if (levelText != null)
+        {
+            levelText.text = $"Level: {GameManager.Instance.Level}";
+        }
+    }
+
     public void OnLoadedDataEvent(LoadedData eventType)
     {
         if (coinText != null)
@@ -29,10 +42,4 @@ public class GUIProfile : GUIBase
         }
     }
 
-    // Các phương thức khác để trống nếu không cần
-    public void OnDieEvent(DieEvent eventType) { }
-    public void OnLoseAHeartEvent(LoseAHeartEvent eventType) { }
-    public void OnEarnCoinEvent(EarnCoinEvent eventType) { }
-    public void OnGetAHeartEvent(GetAHeart eventType) { }
-    public void OnLevelCompleteEvent(LevelCompleteEvent eventType) { }
 }

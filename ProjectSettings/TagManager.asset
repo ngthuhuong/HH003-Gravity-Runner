@@ -7,9 +7,9 @@ TagManager:
   - Ground
   - Trap
   - Coin
-  - Checkponit
   - MBox
   - End
+  - Checkpoint
   layers:
   - Default
   - TransparentFX
