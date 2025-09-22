@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,11 +10,16 @@ public class VolumeButton : MonoBehaviour
 
     private bool isMuted = false;  // Biến lưu trạng thái mute
 
+    private void Start()
+    {
+        
+    }
+
     // Hàm gọi khi nhấn nút volume
     public void ToggleMute()
     {
         isMuted = !isMuted;  // Đổi trạng thái
-
+        Debug.Log("Toggle Mute: " + isMuted);
         if (isMuted)
         {
             volumeImage.sprite = muteSprite;
