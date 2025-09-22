@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using MoreMountains.Tools;
 using UnityEngine;
 using UnityEngine.Events;
@@ -7,9 +8,9 @@ public class Health : MonoBehaviour,MMEventListener<GetAHeart>
 {
     [Header("Health Settings")]
     public int maxHealth = 300;
-    public int currentHealth;
+    private int currentHealth;
     public bool canTakeDamage = true;
-    public float invulnerabilityTime = 0.5f; // Thời gian bất tử sau khi nhận damage
+    private float invulnerabilityTime = 5f; // Thời gian bất tử sau khi nhận damage
     private bool isDead = false;
    
     void Start()
@@ -29,19 +30,21 @@ public class Health : MonoBehaviour,MMEventListener<GetAHeart>
 
     public void TakeDamage(int damage)
     {
-        // Giảm máu
-        currentHealth -= damage;
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-        MMEventManager.TriggerEvent(new LoseAHeartEvent());
+        if (canTakeDamage)
+        {
+            currentHealth -= damage;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            MMEventManager.TriggerEvent(new LoseAHeartEvent());
+        }
+        Debug.Log("invulnerable: " + !canTakeDamage);
+        return;
     }
 
    
     public void Heal(int healAmount)
     {
-        
         if (isDead || healAmount <= 0)
             return;
-
         currentHealth += healAmount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         
@@ -61,7 +64,23 @@ public class Health : MonoBehaviour,MMEventListener<GetAHeart>
         currentHealth = maxHealth;
         canTakeDamage = true;
     }
-    
+
+    public void invulnerable()
+    {
+        canTakeDamage = false;
+        StartCoroutine(WaitUntilEndInvulnerability());
+    }
+
+    public IEnumerator WaitUntilEndInvulnerability()
+    {
+        yield return new WaitForSeconds(invulnerabilityTime);
+        canTakeDamage = true;
+        PlayerController playerController = GetComponent<PlayerController>();
+        if (playerController != null)
+        {
+            playerController.UnableShield();
+        }
+    }
 
     public void SetMaxHealth(int newMaxHealth)
     {

@@ -10,6 +10,7 @@ TagManager:
   - MBox
   - End
   - Checkpoint
+  - Shield
   layers:
   - Default
   - TransparentFX

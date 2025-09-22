@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEventListener<ResumeGameEvent>,
     MMEventListener<LoseAHeartEvent>
 {
-    // --- Fields ---
+    
     private Rigidbody2D rb;
     private Animator playerAnimator;
     private Health playerHealth;
@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     private Vector3 checkPoint;
     private bool savedGravity;
     public float moveSpeed = 5f; // Player movement speed
-
+    [SerializeField] GameObject shieldEffect;
     // --- Unity Methods ---
     private void Start()
     {
@@ -108,7 +108,10 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         }
         else if (collision.gameObject.CompareTag("Trap"))
         {
-            MMEventManager.TriggerEvent(new HitEvent());
+            if (playerHealth.canTakeDamage)
+            {
+                MMEventManager.TriggerEvent(new HitEvent());
+            }
         }
     }
 
@@ -145,14 +148,17 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
                 SaveTheRestartPoint();
                 Destroy(other.gameObject); 
                 break;
-
+            case "Shield":
+                shieldEffect.SetActive(true);
+                playerHealth.invulnerable();
+                Destroy(other.gameObject);
+                break;
             default:
                 // Optional: Handle other cases or do nothing
                 break;
         }
     }
     
-
     private bool IsTapped()
     {
         return Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began ||
@@ -180,7 +186,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
             Time.timeScale = 0f; // Stop the game
         }
     }
-
     
 
     #endregion
@@ -276,6 +281,10 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         }
         isGrounded = true;
         playerAnimator.SetBool("isRun", true);
+    }
+    public void UnableShield()
+    {
+        shieldEffect.SetActive(false);
     }
 }
  
