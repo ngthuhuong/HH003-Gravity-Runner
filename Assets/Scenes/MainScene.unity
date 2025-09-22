@@ -1928,7 +1928,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
       propertyPath: Maps.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
       propertyPath: Maps.Array.data[0]
@@ -1942,6 +1942,10 @@ PrefabInstance:
       propertyPath: Maps.Array.data[2]
       value: 
       objectReference: {fileID: 8791174063072484832, guid: 287196f6a895439449ffff356caa6615, type: 3}
+    - target: {fileID: 5392065574022369429, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
+      propertyPath: Maps.Array.data[3]
+      value: 
+      objectReference: {fileID: 8791174063072484832, guid: b0c540cbdef6b1749aed9037ea8d770b, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

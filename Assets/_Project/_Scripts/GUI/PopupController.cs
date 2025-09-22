@@ -14,6 +14,7 @@ public class PopupController : GUIBase
     private void Awake()
     {
         GUIManager.Instance.RegisterGUIComponent("popup", this);
+        backToHome.gameObject.SetActive(false);
         Hide();
     }
 
@@ -38,7 +39,7 @@ public class PopupController : GUIBase
             Debug.LogError("PopupController: Missing required references.");
             return;
         }
-        backToHome.gameObject.SetActive(false);
+       
     }
 
     public override void Show()
@@ -82,8 +83,8 @@ public class PopupController : GUIBase
         {
             rewardText.text = $"You complete level {GameManager.Instance.Level - 1}!";
         }
-        closeButton.gameObject.SetActive(false);
-        backToHome.gameObject.SetActive(true);
+
+        backToHome.gameObject.SetActive(true);            
         Show();
     }
 
@@ -96,7 +97,4 @@ public class PopupController : GUIBase
         backToHome.gameObject.SetActive(true);
         Show();
     }
-
-
-   
 }

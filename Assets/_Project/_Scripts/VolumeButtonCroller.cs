@@ -19,7 +19,6 @@ public class VolumeButton : MonoBehaviour
     public void ToggleMute()
     {
         isMuted = !isMuted;  // Đổi trạng thái
-        Debug.Log("Toggle Mute: " + isMuted);
         if (isMuted)
         {
             volumeImage.sprite = muteSprite;

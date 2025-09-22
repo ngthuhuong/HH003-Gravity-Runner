@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private const string CoinKey = "CoinCount";
     private const string LevelKey = "Level";
 
-    public int Level { get; private set; } = 3;
+    public int Level { get; private set; } = 4;
 
     private GUIHUD_Controller GUIHUD;
     [SerializeField] private List<GameObject> Maps = new List<GameObject>();
@@ -39,7 +39,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private void SetDefaultData()
     {
         PlayerPrefs.SetInt(CoinKey, 0);
-        PlayerPrefs.SetInt(LevelKey, 3);
+        PlayerPrefs.SetInt(LevelKey, 4);
         PlayerPrefs.Save();
         isLoaded = true; 
         MMEventManager.TriggerEvent(new LoadedData());
