@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 public class RoadController : MonoBehaviour
 {
+    [SerializeField] private GameObject road;
     [SerializeField] public List<GameObject> levels;
     private GameObject currentLevel;
     private int currentLevelIndex = 0;
@@ -65,22 +66,18 @@ public class RoadController : MonoBehaviour
         }
         else
         {
-            Debug.Log($"Level {currentLevelIndex} is outside the frame! Moving it inside...");
+            Debug.Log($"Level {currentLevelIndex} is outside the frame! Moving road inside...");
 
             // Tìm điểm gần nhất trên frame từ trung tâm của level
             Vector3 levelCenter = levelBounds.center;
             Vector3 closestPoint = frameBounds.ClosestPoint(levelCenter);
-
-            // Tính vector di chuyển
             Vector3 moveVector = closestPoint - levelCenter;
+            road.transform.position += moveVector;
 
-            // Di chuyển currentLevel
-            currentLevel.transform.position += moveVector;
-
-            // Debug để kiểm tra
-            Debug.Log($"Moved level {currentLevelIndex} by vector: {moveVector}");
+            Debug.Log($"Moved road by vector: {moveVector}");
         }
     }
+
 
     private Bounds GetBounds(GameObject obj)
     {
