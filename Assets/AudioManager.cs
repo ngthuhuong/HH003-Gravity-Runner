@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class AudioManager : Singleton<AudioManager>,
     MMEventListener<EarnCoinEvent>,
-    MMEventListener<HitEvent>,
     MMEventListener<DieEvent>,
     MMEventListener<LevelCompleteEvent>,
     MMEventListener<LoseAHeartEvent>
@@ -81,7 +80,6 @@ public class AudioManager : Singleton<AudioManager>,
     private void OnEnable()
     {
         this.MMEventStartListening<EarnCoinEvent>();
-        this.MMEventStartListening<HitEvent>();
         this.MMEventStartListening<DieEvent>();
         this.MMEventStartListening<LevelCompleteEvent>();
         this.MMEventStartListening<LoseAHeartEvent>();
@@ -91,7 +89,6 @@ public class AudioManager : Singleton<AudioManager>,
     private void OnDisable()
     {
         this.MMEventStopListening<EarnCoinEvent>();
-        this.MMEventStopListening<HitEvent>();
         this.MMEventStopListening<DieEvent>();
         this.MMEventStopListening<LevelCompleteEvent>();
         this.MMEventStopListening<LoseAHeartEvent>();
@@ -127,7 +124,6 @@ public class AudioManager : Singleton<AudioManager>,
 
 
     public void OnMMEvent(EarnCoinEvent eventType) => PlaySound(Sound.Score);
-    public void OnMMEvent(HitEvent eventType) => PlaySound(Sound.Hit);
     public void OnMMEvent(DieEvent eventType) => PlaySound(Sound.Death);
     public void OnMMEvent(LevelCompleteEvent eventType) => PlaySound(Sound.LevelUp);
     public void OnMMEvent(LoseAHeartEvent eventType) => PlaySound(Sound.Hit);

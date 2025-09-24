@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     private bool gravityFlipped = false;
     private bool isGrounded = false; // Track if the player is grounded
     private bool isStopped = false; // Track if the player is stopped
+    private bool isRunningSoundPlaying = false;
 
     private float distance;
     private Vector3 startPoint;
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     private bool savedGravity;
     public float moveSpeed = 5f; // Player movement speed
     [SerializeField] GameObject shieldEffect;
+    
     // --- Unity Methods ---
     private void Start()
     {
@@ -167,7 +169,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void FlipGravity()
     {
-        AudioManager.Instance.PlaySound(AudioManager.Sound.Jump);
         gravityFlipped = !gravityFlipped;
         rb.gravityScale = gravityFlipped ? -1f : 1f;
 
