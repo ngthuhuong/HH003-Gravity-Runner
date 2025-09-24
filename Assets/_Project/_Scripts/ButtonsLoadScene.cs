@@ -17,6 +17,7 @@ public class ButtonsLoadScene : MonoBehaviour
             btn.onClick.AddListener(() =>
             {
                 SceneManager.LoadScene("Levels");
+                AudioManager.Instance.PlayMusic(AudioManager.MusicType.Gameplay);
             });
         }
         else

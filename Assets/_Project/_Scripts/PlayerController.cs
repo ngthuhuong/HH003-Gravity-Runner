@@ -167,6 +167,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void FlipGravity()
     {
+        AudioManager.Instance.PlaySound(AudioManager.Sound.Jump);
         gravityFlipped = !gravityFlipped;
         rb.gravityScale = gravityFlipped ? -1f : 1f;
 
