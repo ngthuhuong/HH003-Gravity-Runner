@@ -123,8 +123,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 3374411725780043611, guid: 7af9361f296d232438b2fb0cfcaa75cf, type: 3}
         m_TargetAssemblyTypeName: ScenesManager, Assembly-CSharp
-        m_MethodName: LoadToScene
-        m_Mode: 5
+        m_MethodName: LoadMainScene
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

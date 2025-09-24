@@ -13,9 +13,8 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     private Health playerHealth;
 
     private bool gravityFlipped = false;
-    private bool isGrounded = false; // Track if the player is grounded
-    private bool isStopped = false; // Track if the player is stopped
-    private bool isRunningSoundPlaying = false;
+    private bool isGrounded = false;
+    private bool isStopped = false; 
 
     private float distance;
     private Vector3 startPoint;
@@ -133,12 +132,12 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         {
             case "Coin":
                 MMEventManager.TriggerEvent(new EarnCoinEvent(1)); // Increase coin count
-                Destroy(other.gameObject); // Destroy the coin
+                other.gameObject.SetActive(false);
                 break;
 
             case "MBox":
                 MMEventManager.TriggerEvent(new GetBoxEvent());
-                Destroy(other.gameObject); // Destroy the box
+                other.gameObject.SetActive(false);
                 break;
 
             case "End":
@@ -148,12 +147,12 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
             case "Checkpoint":
                 Debug.Log("Checkpoint");
                 SaveTheRestartPoint();
-                Destroy(other.gameObject); 
+                other.gameObject.SetActive(false);
                 break;
             case "Shield":
                 shieldEffect.SetActive(true);
                 playerHealth.invulnerable();
-                Destroy(other.gameObject);
+                other.gameObject.SetActive(false);
                 break;
             default:
                 // Optional: Handle other cases or do nothing

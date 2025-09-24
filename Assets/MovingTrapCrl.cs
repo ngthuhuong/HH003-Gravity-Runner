@@ -1,17 +1,24 @@
 using UnityEngine;
 
-//[ExecuteAlways] // để update cả trong Editor
+//[ExecuteAlways] // nếu muốn update cả trong Editor
+[RequireComponent(typeof(BoxCollider2D))]
 public class MovingTrap : MonoBehaviour
 {
-    [Header("Trap Settings")]
+    [Header("----Trap Settings----")]
     [SerializeField] private SpriteRenderer spriteRenderer; // sprite gốc (1x1)
     [SerializeField] private int length = 5;                // số mảnh ngang
-    [SerializeField] private float height = 1f;             // số mảnh dọc (nếu muốn)
+    [SerializeField] private float height = 1f;             // số mảnh dọc
     [SerializeField] private float speed = 3f;              // tốc độ
     [SerializeField] private float moveDistance = 5f;       // quãng đường di chuyển
 
     private Vector3 startPos;
     private int direction = 1;
+    private BoxCollider2D boxCollider;
+
+    void Awake()
+    {
+        boxCollider = GetComponent<BoxCollider2D>();
+    }
 
     void Start()
     {
@@ -25,20 +32,27 @@ public class MovingTrap : MonoBehaviour
     }
 
     /// <summary>
-    /// Xây trap bằng cách scale hoặc lặp sprite
+    /// Xây trap bằng cách scale sprite + update collider
     /// </summary>
     private void BuildTrap()
     {
         if (spriteRenderer == null) return;
 
-        // Dùng tiling thay vì clone nhiều object
+        // Set tiled mode
         spriteRenderer.drawMode = SpriteDrawMode.Tiled;
         spriteRenderer.size = new Vector2(length, height);
+
+        // Update collider khớp sprite
+        if (boxCollider != null)
+        {
+            boxCollider.size = new Vector2(length, height);
+            
+        }
     }
 
     private void MoveTrap()
     {
-        transform.Translate(Vector3.right * direction * speed * Time.deltaTime);
+        transform.Translate( direction * speed * Time.deltaTime*Vector3.right );
 
         if (Vector3.Distance(startPos, transform.position) >= moveDistance)
         {
