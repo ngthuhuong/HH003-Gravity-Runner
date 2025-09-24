@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         gravityFlipped = !gravityFlipped;
         rb.gravityScale = gravityFlipped ? -1f : 1f;
 
-        // Flip the player's scale to reflect gravity change
+        AudioManager.Instance.PlaySound(AudioManager.Sound.Jump);
         Vector3 scale = transform.localScale;
         scale.y *= -1;
         transform.localScale = scale;
