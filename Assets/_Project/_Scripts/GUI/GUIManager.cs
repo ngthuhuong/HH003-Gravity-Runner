@@ -4,7 +4,7 @@ using UnityEditor.Search;
 using UnityEngine;
 public class GUIManager : Singleton<GUIManager>, 
     MMEventListener<LoadedData>, 
-    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>
+    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>,MMEventListener<GetAHeart>
 {
     private GUIHUD_Controller guiHUD;
     private FailPanelController guiFailPanel;
@@ -18,6 +18,7 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStartListening<PauseGameEvent>();
         this.MMEventStartListening<LevelCompleteEvent>();
         this.MMEventStartListening<EarnRewardEvent>();
+        this.MMEventStartListening<GetAHeart>();
     }
     
     private void OnDisable()
@@ -28,6 +29,7 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStopListening<PauseGameEvent>();
         this.MMEventStopListening<LevelCompleteEvent>();
         this.MMEventStopListening<EarnRewardEvent>();
+        this.MMEventStopListening<GetAHeart>();
     }
 
     public void RegisterGUIComponent(string componentName, GUIBase component)
@@ -99,5 +101,10 @@ public class GUIManager : Singleton<GUIManager>,
     public void OnMMEvent(PauseGameEvent eventType)
     {
         guiPopup.PauseGame();
+    }
+
+    public void OnMMEvent(GetAHeart eventType)
+    {
+        guiHUD.ShowAHeart();
     }
 }

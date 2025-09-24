@@ -74,7 +74,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
         PlayerPrefs.SetInt(CoinKey, coinCount);
         PlayerPrefs.SetInt(LevelKey, Level);
         PlayerPrefs.Save();
-        Debug.Log($"Data saved: Coin = {coinCount}, Level = {Level}");
+       // Debug.Log($"Data saved: Coin = {coinCount}, Level = {Level}");
     }
 
     private void LoadData()

@@ -136,6 +136,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
                 break;
 
             case "MBox":
+                AudioManager.Instance.PlaySound(AudioManager.Sound.Score);
                 MMEventManager.TriggerEvent(new GetBoxEvent());
                 other.gameObject.SetActive(false);
                 break;
@@ -239,7 +240,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
         playerAnimator.SetBool("isRun", false); // Stop running animation
     }
 
-    public void ContinuePlayer() //comeback to the start point
+    public void ContinuePlayer() //comeback to the check point
     {
         if (checkPoint != Vector3.zero)
         {
