@@ -14,9 +14,9 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private bool gravityFlipped = false;
     private bool isGrounded = false;
-    private bool isStopped = false; 
+    private bool isStopped = false;
+    private bool allowTapped = true;
 
-    private float distance;
     private Vector3 startPoint;
     private Vector3 checkPoint;
     private bool savedGravity;
@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     private void Start()
     {
         InitializeComponents();
-        distance = 0;
         SaveTheRestartPoint();
     }
 
@@ -93,7 +92,7 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
     private void HandleInput()
     {
-        if (IsTapped() && isGrounded)
+        if (allowTapped&&IsTapped() && isGrounded)
         {
             FlipGravity();
         }
@@ -137,11 +136,13 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
 
             case "MBox":
                 AudioManager.Instance.PlaySound(AudioManager.Sound.Score);
+                StopPlayer();
                 MMEventManager.TriggerEvent(new GetBoxEvent());
                 other.gameObject.SetActive(false);
                 break;
 
             case "End":
+                StopPlayer();
                 MMEventManager.TriggerEvent(new LevelCompleteEvent());
                 break;
 
@@ -236,8 +237,14 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     public void StopPlayer()
     {
         isStopped = true;
+        allowTapped = false;
         rb.velocity = Vector2.zero; // Stop player movement
         playerAnimator.SetBool("isRun", false); // Stop running animation
+    }
+
+    public void UnableTapped()
+    {
+        allowTapped = false;
     }
 
     public void ContinuePlayer() //comeback to the check point
@@ -259,20 +266,24 @@ public class PlayerController : MonoBehaviour, MMEventListener<HitEvent>, MMEven
     }
     public void ContinuePlayerNoReset() 
     {
-        isStopped = true;
+        isStopped = true; 
         if (gravityFlipped != savedGravity)
         {
-            FlipGravity(); // Use the existing method to flip gravity
+            FlipGravity(); 
         }
         isGrounded = true;
         playerAnimator.Play("Idle");
+
         StartCoroutine(WaitForCoolDown());
     }
+    
     private IEnumerator WaitForCoolDown()
     {
-             yield return new WaitForSeconds(1f); 
-             isStopped = false; 
-             playerAnimator.SetBool("isRun",true);
+        yield return new WaitForSeconds(1f);
+
+        isStopped = false; 
+        allowTapped = true;
+        playerAnimator.SetBool("isRun", true); 
     }
     public void RunInstantly()
     {

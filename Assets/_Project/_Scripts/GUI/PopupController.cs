@@ -26,10 +26,9 @@ public class PopupController : GUIBase
             Debug.LogError("PopupController: Missing required references.");
             return;
         }
-
-        // Gán sự kiện click
-        closeButton.onClick.RemoveAllListeners();
-        closeButton.onClick.AddListener(() => Hide());
+        
+      //  closeButton.onClick.AddListener(() => HideAndResume());
+        
     }
     
     private void Start()
