@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : Singleton<AudioManager>,
     MMEventListener<EarnCoinEvent>,
@@ -17,6 +18,25 @@ public class AudioManager : Singleton<AudioManager>,
     [SerializeField] private MusicList[] musics;    
     [SerializeField] private SoundList[] soundList;
 
+    private bool isMuted = false;
+    public bool IsMuted { get { return isMuted; } set { isMuted = value; } }
+    
+    private float volume;
+    public float Volume
+    {
+        get
+        {
+            return PlayerPrefs.GetFloat("Volume", 1f);
+        }
+        set
+        {
+            volume = Mathf.Clamp01(value);
+            PlayerPrefs.SetFloat("Volume", volume); 
+            PlayerPrefs.Save(); // Persist the changes
+        }
+    }
+    
+    
     [Serializable]
     public struct SoundList
     {

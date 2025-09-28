@@ -14,13 +14,26 @@ public class VolumeButton : MonoBehaviour
 
     private void Start()
     {
-        
+        isMuted = AudioManager.Instance.IsMuted;
+        if (isMuted)
+        {
+            volumeImage.sprite = muteSprite;
+            volumeText.text = "Unmute";
+            AudioListener.volume = 0f;  
+        }
+        else
+        {
+            volumeImage.sprite = unmuteSprite;
+            volumeText.text = "Mute";
+            AudioListener.volume = 1f;  
+        }
     }
 
 
     public void ToggleMute()
     {
         isMuted = !isMuted; 
+        AudioManager.Instance.IsMuted = isMuted;
         if (isMuted)
         {
             volumeImage.sprite = muteSprite;
