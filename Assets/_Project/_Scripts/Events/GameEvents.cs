@@ -64,3 +64,8 @@ public struct PauseGameEvent
         return new PauseGameEvent();
     }
 }
+
+public struct NoMap
+{
+    
+}

@@ -4,12 +4,13 @@ using UnityEditor.Search;
 using UnityEngine;
 public class GUIManager : Singleton<GUIManager>, 
     MMEventListener<LoadedData>, 
-    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>,MMEventListener<GetAHeart>
+    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>,MMEventListener<GetAHeart>,MMEventListener<NoMap>
 {
     private GUIHUD_Controller guiHUD;
     private FailPanelController guiFailPanel;
     private PopupController guiPopup;
     private GUIProfile guiProfile;
+    private GUINotiController guiNoti;
     private void OnEnable()
     {
         this.MMEventStartListening<LoadedData>();
@@ -19,6 +20,7 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStartListening<LevelCompleteEvent>();
         this.MMEventStartListening<EarnRewardEvent>();
         this.MMEventStartListening<GetAHeart>();
+        this.MMEventStartListening<NoMap>();
     }
     
     private void OnDisable()
@@ -30,6 +32,7 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStopListening<LevelCompleteEvent>();
         this.MMEventStopListening<EarnRewardEvent>();
         this.MMEventStopListening<GetAHeart>();
+        this.MMEventStopListening<NoMap>();
     }
 
     public void RegisterGUIComponent(string componentName, GUIBase component)
@@ -47,6 +50,9 @@ public class GUIManager : Singleton<GUIManager>,
                 break;
             case "profile":
                 guiProfile = component as GUIProfile;
+                break;
+            case "noti":
+                guiNoti = component as GUINotiController;
                 break;
         }
     }
@@ -106,5 +112,10 @@ public class GUIManager : Singleton<GUIManager>,
     public void OnMMEvent(GetAHeart eventType)
     {
         guiHUD.ShowAHeart();
+    }
+
+    public void OnMMEvent(NoMap eventType)
+    {
+        guiNoti.AlertNoMap();
     }
 }

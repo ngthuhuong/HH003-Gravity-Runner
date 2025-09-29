@@ -4,7 +4,7 @@ public class CameraFollow : MonoBehaviour
 {
     public Transform target;        // Nhân vật cần theo dõi
     public Vector3 offset = new Vector3(3f, 0f, -10f); // Khoảng cách camera với nhân vật
-    public float smoothSpeed = 5f;  // Tốc độ theo mượt
+    public float smoothSpeed = 10f;  // Tốc độ theo mượt
 
     void LateUpdate()
     {
