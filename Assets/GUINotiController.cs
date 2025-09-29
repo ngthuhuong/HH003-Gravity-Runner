@@ -14,16 +14,6 @@ public class GUINotiController : GUIBase
             Hide();
         }
 
-    void Start()
-    {
-        txtNoti = transform.Find("txtNoti").GetComponent<TextMeshProUGUI>();
-    }
-
-    private void OnEnable()
-    {
-        txtNoti = transform.Find("txtNoti").GetComponent<TextMeshProUGUI>();
-    }
-
 
     // Update is called once per frame
     void Update()

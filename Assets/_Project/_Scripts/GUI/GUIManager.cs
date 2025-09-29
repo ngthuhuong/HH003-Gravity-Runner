@@ -4,7 +4,7 @@ using UnityEditor.Search;
 using UnityEngine;
 public class GUIManager : Singleton<GUIManager>, 
     MMEventListener<LoadedData>, 
-    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>,MMEventListener<GetAHeart>,MMEventListener<NoMap>
+    MMEventListener<LoseAHeartEvent>,MMEventListener<DieEvent>,MMEventListener<PauseGameEvent>,MMEventListener<LevelCompleteEvent>,MMEventListener<EarnRewardEvent>,MMEventListener<GetAHeart>
 {
     private GUIHUD_Controller guiHUD;
     private FailPanelController guiFailPanel;
@@ -20,7 +20,6 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStartListening<LevelCompleteEvent>();
         this.MMEventStartListening<EarnRewardEvent>();
         this.MMEventStartListening<GetAHeart>();
-        this.MMEventStartListening<NoMap>();
     }
     
     private void OnDisable()
@@ -32,7 +31,6 @@ public class GUIManager : Singleton<GUIManager>,
         this.MMEventStopListening<LevelCompleteEvent>();
         this.MMEventStopListening<EarnRewardEvent>();
         this.MMEventStopListening<GetAHeart>();
-        this.MMEventStopListening<NoMap>();
     }
 
     public void RegisterGUIComponent(string componentName, GUIBase component)
@@ -76,6 +74,10 @@ public class GUIManager : Singleton<GUIManager>,
         }
     }
 
+    public void ShowAlertFinish()
+    {
+        guiPopup.FinishAllLevel();
+    }
     public void OnMMEvent(LoadedData eventType)
     {
         guiProfile?.OnLoadedDataEvent(eventType);
@@ -114,8 +116,4 @@ public class GUIManager : Singleton<GUIManager>,
         guiHUD.ShowAHeart();
     }
 
-    public void OnMMEvent(NoMap eventType)
-    {
-        guiNoti.AlertNoMap();
-    }
 }

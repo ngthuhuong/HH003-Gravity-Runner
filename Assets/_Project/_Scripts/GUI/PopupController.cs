@@ -80,11 +80,11 @@ public class PopupController : GUIBase
     {
         if (rewardText != null && GameManager.Instance.isLoaded)
         {
-            rewardText.text = $"You complete level {GameManager.Instance.Level - 1}!";
+            rewardText.text = $"You complete level {GameManager.Instance.Level}!";
         }
-
         backToHome.gameObject.SetActive(true);            
         Show();
+        GameManager.Instance.NextLevel();
     }
 
     public void PauseGame()
@@ -93,6 +93,16 @@ public class PopupController : GUIBase
         {
             rewardText.text = "Pause Game!";
         }
+        backToHome.gameObject.SetActive(true);
+        Show();
+    }
+    public void FinishAllLevel()
+    {
+        if (rewardText != null)
+        {
+            rewardText.text = "Bạn đã vượt qua hết các levels!";
+        }
+        closeButton.gameObject.SetActive(false);
         backToHome.gameObject.SetActive(true);
         Show();
     }

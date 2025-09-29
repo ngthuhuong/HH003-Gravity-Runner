@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using MoreMountains.Tools;
 using UnityEngine;
 
-public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent>, MMEventListener<LevelCompleteEvent>
+public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent>
 {
     private int coinCount = 0;
     public int CoinCount => coinCount;
@@ -11,6 +11,11 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private const string LevelKey = "Level";
 
     public int Level { get; private set; } = 5;
+    private int maxLevel = 5; 
+    public int MaxLevel => maxLevel;
+    private bool isFinishAllLevel = false;
+    public bool IsFinishAllLevel => isFinishAllLevel;
+
 
     private GUIHUD_Controller GUIHUD;
     [SerializeField] private List<GameObject> Maps = new List<GameObject>();
@@ -20,13 +25,11 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private void OnEnable()
     {
         this.MMEventStartListening<EarnCoinEvent>();
-        this.MMEventStartListening<LevelCompleteEvent>();
     }
 
     private void OnDisable()
     {
         this.MMEventStopListening<EarnCoinEvent>();
-        this.MMEventStopListening<LevelCompleteEvent>();
     }
 
     private void Start()
@@ -57,11 +60,19 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
         SaveData();
     }
 
-    public void NextLevel( )
+    public void NextLevel()
     {
-        Level+=1;
-        SaveData();
-        Debug.Log("Level set to: " + Level);
+        if (Level < MaxLevel)
+        {
+            Level += 1;
+            SaveData();
+            Debug.Log("Level set to: " + Level);
+        }
+        else
+        {
+            isFinishAllLevel = true;
+            GUIManager.Instance.ShowAlertFinish();
+        }
     }
 
     public void OnMMEvent(EarnCoinEvent eventType)
@@ -113,12 +124,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
 
     public void PlayInstantlyALevel()
     {
-        
         PlayALevel();
     }
-
-    public void OnMMEvent(LevelCompleteEvent eventType)
-    {
-        NextLevel();
-    }
+    
 }

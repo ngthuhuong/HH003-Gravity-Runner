@@ -65,7 +65,3 @@ public struct PauseGameEvent
     }
 }
 
-public struct NoMap
-{
-    
-}

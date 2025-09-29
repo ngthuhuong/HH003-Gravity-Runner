@@ -36,21 +36,11 @@ public class RoadController : MonoBehaviour
                 {
                     child.gameObject.SetActive(true);
                 }
-            }else if (currentLevelIndex - 1 >= levels.Count)
-            {
-                // Nếu vượt quá số level, giữ ở level cuối
-                currentLevel = levels[levels.Count - 1];
-                foreach (Transform child in currentLevel.transform)
-                {
-                    child.gameObject.SetActive(true);
-                }
-                MMEventManager.TriggerEvent(new NoMap());
             }
             else
             {
                 Debug.LogError("Invalid level index or levels list is empty!");
             }
-
             inFrameCheck();
         }
     }
