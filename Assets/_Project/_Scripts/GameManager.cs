@@ -11,7 +11,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private const string LevelKey = "Level";
 
     public int Level { get; private set; } = 5;
-    private int maxLevel = 5; 
+    private int maxLevel = 6; 
     public int MaxLevel => maxLevel;
     private bool isFinishAllLevel = false;
     public bool IsFinishAllLevel => isFinishAllLevel;
