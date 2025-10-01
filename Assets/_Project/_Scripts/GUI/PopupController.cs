@@ -82,6 +82,7 @@ public class PopupController : GUIBase
         {
             rewardText.text = $"You complete level {GameManager.Instance.Level}!";
         }
+        closeButton.gameObject.SetActive(false);
         backToHome.gameObject.SetActive(true);            
         Show();
         GameManager.Instance.NextLevel();
