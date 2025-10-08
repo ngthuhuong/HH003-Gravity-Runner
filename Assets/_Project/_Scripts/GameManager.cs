@@ -10,7 +10,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private const string CoinKey = "CoinCount";
     private const string LevelKey = "Level";
 
-    public int Level { get; private set; } = 2;
+    public int Level { get; private set; } = 5;
     private int maxLevel = 7; 
     public int MaxLevel => maxLevel;
     private bool isFinishAllLevel = false;
@@ -42,7 +42,7 @@ public class GameManager : Singleton<GameManager>, MMEventListener<EarnCoinEvent
     private void SetDefaultData()
     {
         PlayerPrefs.SetInt(CoinKey, 0);
-        PlayerPrefs.SetInt(LevelKey, 2);
+        PlayerPrefs.SetInt(LevelKey, 5);
         PlayerPrefs.Save();
         isLoaded = true; 
         MMEventManager.TriggerEvent(new LoadedData());
